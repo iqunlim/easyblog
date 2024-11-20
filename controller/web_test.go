@@ -10,6 +10,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/assert"
+	"github.com/iqunlim/easyblog/config"
 	"github.com/iqunlim/easyblog/model"
 	"github.com/iqunlim/easyblog/repository"
 	"github.com/iqunlim/easyblog/service"
@@ -317,21 +318,37 @@ func TestWebHandlerImpl_PostsWebHandler(t *testing.T) {
 	bodyHasFragments(t, w.Body.String(), fragments)
 }
 
-func TestWebHandlerImpl_RegisterWebHandler(t *testing.T) {
+func TestWebHandlerImpl_RegisterWebHandlerEnabled(t *testing.T) {
 
 	// TODO handler
 	router, web, _ := setupWeb(t)
 	router.GET("/register", web.RegisterWebHandler)
+
+	config.RegisterAllowed = "true" // Hard-configuring
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/register", nil)
+
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusOK, w.Code)
+
+}
+
+func TestWebHandlerImpl_RegisterWebHandlerDisabled(t *testing.T) {
+
+	// TODO handler
+	router, web, _ := setupWeb(t)
+	router.GET("/register", web.RegisterWebHandler)
+	config.RegisterAllowed = "false" // Hard-configuring
 
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/register", nil)
 
 	router.ServeHTTP(w, req)
 
-	assert.Equal(t, http.StatusInternalServerError, w.Code)
+	assert.Equal(t, http.StatusFound, w.Code)
 
 }
-
 func TestWebHandlerImpl_LoginWebHandler(t *testing.T) {
 
 	//TODO: Think about if checking a cookie is okay??? Maybe we 

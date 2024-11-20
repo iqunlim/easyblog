@@ -36,7 +36,7 @@ var (
 	// AllowOirigins will be set to the domain specified in 
 	// the DOMAIN Environment variable
 	CORSConfig = cors.Config{
-		AllowOrigins: []string{GetEnvWithWarning("DOMAIN", "*")},
+		AllowOrigins: []string{Domain},
 		AllowMethods: []string{"GET", "POST", "PUT", "DELETE", "HEAD"},
 		AllowHeaders: []string{"Origin", "Content-Type", "x-requested-with"},
 		ExposeHeaders: []string{"Content-Length"},
