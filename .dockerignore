@@ -1,0 +1,7 @@
+test.db
+.vscode/
+.hidden/
+utils/
+.mockery.yaml
+mock_*
+Makefile

@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+  {{ template "header" . }}
+  <body>
+    {{ template "banner" . }}
+    <div class="container">
+      {{ range .posts }} {{ template "post" . }} {{ end }}
+    </div>
+  </body>
+</html>

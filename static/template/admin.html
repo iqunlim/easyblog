@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  {{ template "header" . }}
+  <body>
+    {{ template "banner" . }}
+    <div class="container">
+      <div class="post"><a href="/posts">Return to main page</a></div>
+      {{ range .posts }}
+      <div class="post">
+        <p>
+          {{ .Title }} <a class="edit" href="/admin/edit/{{ .ID }}">Edit </a
+          ><a class="delete" href="/admin/posts/{{ .ID }}">Delete</a>
+        </p>
+      </div>
+      {{ end }}
+      <div class="post">
+        <p><a class="new" href="/admin/edit">New</a></p>
+      </div>
+    </div>
+  </body>
+  <!-- Event Listeners for confirmation dialogs -->
+  <script>
+    const d = document.querySelectorAll(".delete");
+    d.forEach((element) => {
+      element.addEventListener("click", (event) => {
+        p = element.getAttribute("href").split("/");
+        event.preventDefault();
+        if (
+          confirm(
+            "Are you sure you want to delete Post # " + p[p.length - 1] + "?"
+          ) == true
+        ) {
+          fetch("/admin/posts/" + p[p.length - 1], {
+            credentials: "same-origin",
+            mode: "same-origin",
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+          })
+            .then(() => location.reload())
+            .catch((error) => console.log(error));
+        }
+      });
+    });
+    (async () => {
+      fetch("/api/v1/refresh", {
+        credentials: "same-origin",
+        method: "GET",
+        mode: "same-origin",
+      });
+    })();
+  </script>
+</html>

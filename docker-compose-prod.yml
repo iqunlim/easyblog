@@ -1,0 +1,22 @@
+services:
+  app:
+    container_name: easyblog
+    build:
+      context: .
+      target: prod
+    deploy:
+      resources:
+        limits:
+          memory: 500M
+        reservations:
+          memory: 500M
+    ports:
+      - 8080:8080
+    volumes:
+      - easyblog-db-data:/app/db:rw
+    env_file:
+      - .env
+    restart: always
+
+volumes:
+  easyblog-db-data:

@@ -1,41 +1,31 @@
 package model
 
 import (
-	"log"
+	"fmt"
+	"sync"
 
-	"github.com/iqunlim/loginexample/crypt"
-	"golang.org/x/crypto/bcrypt"
+	"github.com/iqunlim/easyblog/config"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
 
-var DBSingleton *gorm.DB
-
-
-func CreateDB() (*gorm.DB, error) {
-	DB, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
-	if err != nil {
-		return nil, err
-	}
-
-	DB.AutoMigrate(&User{})
-	log.Print("Connected to sqlite database")
-	return DB, nil
-}
-
-func VerifyLogin(u *User) (*User, error) {
-	var err error 
-
-	UserInformation := User{}
-
-	if err = DBSingleton.Model(User{}).Where("username = ?", u.Username).Take(&UserInformation).Error; err != nil {
-		return nil, err
-	}
-
-	if !crypt.CheckPasswordHash(u.Password, UserInformation.Password) {
-		return nil, bcrypt.ErrMismatchedHashAndPassword
-	}
-
-	return &UserInformation, nil
+var (
+	db *gorm.DB
+	o sync.Once
+)
+func GetDB() *gorm.DB {
+	o.Do(func() {
+		db = func() *gorm.DB {
+			db, err := gorm.Open(sqlite.Open(config.DatabaseFileLocation), config.GORMConfig)
+			if err != nil {
+				panic("Failed to connect to database: " + err.Error())
+			}
+			db.AutoMigrate(&User{})
+			db.AutoMigrate(&BlogPost{})
+			fmt.Println("Connected to database")
+			return db
+		}()
+	})
+	return db
 }

@@ -1,0 +1,13 @@
+services:
+  app:
+    container_name: easyblog-dev
+    build:
+      context: .
+      target: dev
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/go/src/github.com/iqunlim/easyblog:rw
+      - /home/iq/go/pkg/mod:/go/pkg/mod:ro # prevents constant re-downloading of packages
+    init: true #close out the tail -f /dev/null faster with this handy trick!
+    restart: always

@@ -1,29 +1,24 @@
 package model
 
 import (
+	"database/sql/driver"
+	"errors"
 	"html"
 	"strings"
 
-	"github.com/iqunlim/loginexample/crypt"
+	"github.com/iqunlim/easyblog/crypt"
 	"gorm.io/gorm"
 )
 
 type User struct {
 	gorm.Model
-	Username string `gorm:"size:255;not null;unique" json:"username"`
-	Password string `gorm:"size:255;not null;" json:"password"`
+	Username string `gorm:"size:255;not null;unique" json:"username" form:"username"`
+	Password string `gorm:"size:255;not null;" json:"password" form:"password"`
+	Role string `gorm:"size:255;not null;"` 
 }
 
-func (u *User) SaveToDB() error {
-	var err error 
-	err = DBSingleton.Create(&u).Error
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (u *User) BeforeSave(*gorm.DB) error {
+// BeforeSave likely needs to stay with the models
+func (u *User) BeforeSave(tx *gorm.DB) error {
 	hash, err := crypt.HashPassword(u.Password)
 	if err != nil {
 		return err
@@ -35,13 +30,47 @@ func (u *User) BeforeSave(*gorm.DB) error {
 }
 
 
+// https://raaaaaaaay86.medium.com/how-to-store-plain-string-slice-by-using-gorm-f855602013e6
+type Tags []string
+
+// This turns the VARCHAR string from the db in to the Tags
+func (t *Tags) Scan(src any) error {
+	str, ok := src.(string)
+	if !ok {
+		return errors.New("src value cannot cast to string")
+	}
+	*t = strings.Split(str, ",")
+	return nil
+}
+
+// This turns the Tags []string in to a regular string for the driver
+// Implements the driver.Valuer interface
+func (t Tags) Value() (driver.Value, error) {
+	if len(t) == 0 {
+		return nil, nil
+	}
+	return strings.Join(t, ","), nil
+}
 
 // ID, CreatedAt and UpdatedAt are all handled by GORM
 type BlogPost struct {
 	gorm.Model
-	Title string `json:"title"`
-	// Location of the markdown file that is associated with the blog post
-	ContentLocation string `json:"content"`//TODO: Path? URL? 
-	Category string `json:"category"`
-	Tags []string `json:"tags"`
+	Title string `gorm:"type:VARCHAR(255);not null" json:"title" form:"title"`
+	Content string `gorm:"type:TEXT;not null" json:"content" form:"content"` 
+	Category string `gorm:"type:VARCHAR(255);not null" json:"category" form:"category"`
+	Tags Tags `gorm:"type:VARCHAR(255);" json:"tags" form:"tags"`
 }
+
+/*
+func (b *BlogPost) BeforeSave(tx *gorm.DB) error {
+
+	// Escape incoming 
+	b.Title = html.EscapeString(b.Title)
+	b.Category = html.EscapeString(b.Category)
+	b.Content = html.EscapeString(b.Content)
+	for _, t := range b.Tags {
+		t = html.EscapeString(t)
+	}
+	return nil
+}
+	*/

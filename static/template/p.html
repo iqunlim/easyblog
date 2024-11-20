@@ -1,0 +1,20 @@
+{{define "post"}}
+<div class="post">
+  <h1>{{ .Title }}</h1>
+  <hr />
+  <p class="infoblock">
+    {{ $x := .CreatedAt | formatTimeToString }} {{ $y := .UpdatedAt |
+    formatTimeToString }} Posted: {{ $x }} {{ if ne $x $y }}(Updated: {{ $y
+    }}){{end}}<br /><br />
+    Category: {{ .Category }}
+  </p>
+  <hr />
+  <div class="content">{{ .Content | formatAsHTML }}</div>
+  <hr />
+  <div class="tag">
+    Tags: {{ range .Tags}}
+    <a class="tag" href="/posts?term={{ . }}">{{ . }}</a>
+    {{ end }}
+  </div>
+</div>
+{{end}}

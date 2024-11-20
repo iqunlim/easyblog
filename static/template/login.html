@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+  {{ template "header" . }}
+    <body>
+        <div class="container">
+            <div class="post">
+                <form action="/api/v1/login" method="post">
+                    <label for="username">Username</label><br />
+                    <input id="username" type="text" name="username"><br />
+                    <label for="password">Password</label><br /> 
+                    <input id="password" type="password" name="password"><br />
+                    <input type="submit" value="Log In">
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
