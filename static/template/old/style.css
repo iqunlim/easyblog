@@ -1,0 +1,86 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-image: url(bg1.png);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: white;
+  margin: 0;
+  margin-bottom: 16px;
+}
+
+h1 {
+  margin: 0;
+  text-align: center;
+}
+
+hr {
+  color: white;
+}
+
+label {
+  font-size: 20px;
+}
+
+input[type="text"],
+input[type="password"] {
+  font-size: 20px;
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+}
+
+textarea {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  resize: none;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  gap: 15px;
+}
+
+div#banner {
+  display: flex;
+  padding: 0;
+}
+
+div#banner img {
+  border: solid 3px black;
+  display: block;
+  margin: auto;
+  object-fit: contain;
+  min-width: 500px;
+  max-width: 1000px;
+}
+
+div#auth {
+  background-color: black;
+  border-bottom: solid;
+  border-width: 1px;
+  border-color: white;
+}
+
+a {
+  margin-right: 10px;
+  color: white;
+}
+
+a:visited {
+  color: white;
+}
+
+a:hover {
+  color: #84de94;
+}

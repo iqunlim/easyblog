@@ -130,7 +130,7 @@ func formatAsHTML(s string) template.HTML {
 
 func formatTimeToString(t time.Time) string {
 	year, month, day := t.Date()
-	return fmt.Sprintf("%v %02d, %d", month.String(), day, year)
+	return fmt.Sprintf("%d/%02d/%d", month, day, year)
 }
 
 

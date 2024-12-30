@@ -17,7 +17,7 @@ var (
 	}
 
 	TitleOnly = []string{
-		"ID", "CreatedAt", "UpdatedAt", "DeletedAt", "Title",
+		"ID", "CreatedAt", "UpdatedAt", "DeletedAt", "Title", "Tags",
 	}
 )
 

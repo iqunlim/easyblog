@@ -87,13 +87,13 @@ func (w *WebHandlerImpl) RegisterWebHandler(c *gin.Context) {
 
 func (w *WebHandlerImpl) PostsWebHandler(c *gin.Context) {
 
-	term := c.DefaultQuery("term", "NONE")
+	//term := c.DefaultQuery("term", "NONE")
 	data := gin.H{}
 	if isLoggedIn(c) {
 		data["auth"] = "true"
 	}
 
-	posts, err := w.blogservice.GetAll(c, term, true)
+	posts, err := w.blogservice.GetAllNoContent(c)
 	if err != nil {
 		c.HTML(500, "error.html", gin.H{"err": "Internal Server Error"})
 	}
@@ -128,7 +128,6 @@ func (w *WebHandlerImpl) PostsByIDWebHandler(c *gin.Context) {
 			return
 		}
 	}
-	data["Title"] = ret.Title 
 	data["title"] = ret.Title 
 	data["CreatedAt"] = ret.CreatedAt
 	data["UpdatedAt"] = ret.UpdatedAt
