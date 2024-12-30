@@ -2,19 +2,23 @@
 <html>
   {{ template "header" . }}
   <body>
-    {{ template "banner" . }}
+    {{ template "nav" . }}
     <div class="container">
-      <div class="post"><a href="/posts">Return to main page</a></div>
-      {{ range .posts }}
-      <div class="post">
-        <p>
-          {{ .Title }} <a class="edit" href="/admin/edit/{{ .ID }}">Edit </a
-          ><a class="delete" href="/admin/posts/{{ .ID }}">Delete</a>
-        </p>
-      </div>
-      {{ end }}
-      <div class="post">
-        <p><a class="new" href="/admin/edit">New</a></p>
+      {{ template "banner" . }}
+      <div class="menu-square">
+        <div class="post-table">
+          {{ range .posts }}
+          <div class="admin-row">
+            <span class="post-id">{{ .ID }}.</span>
+            <span class="post-title">{{ .Title }}</span>
+            <a class="edit" href="/admin/edit/{{ .ID }}">Edit</a>
+            <a class="delete" href="/admin/posts/{{ .ID}}">Delete</a>
+          </div>
+          {{ end }}
+          <div class="admin-row blank"></div>
+          <div class="admin-row">
+            <a class="new-post" href="/admin/edit">New</a>
+          </div>
       </div>
     </div>
   </body>
