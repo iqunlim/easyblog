@@ -6,7 +6,7 @@
     <div class="container">
       {{ template "banner" . }}
       <div class="menu-square big-square">
-        <form id="blog-information">
+        <form id="blog-information" method="POST" enctype="multipart/form-data">
           <label for="blogtitle">Title</label>
           <input
             id="blogtitle"
@@ -19,13 +19,16 @@
           <textarea id="blogbody" name="content" rows="50" required>
 {{ .post.Content }}</textarea
           >
-          <label for="category">Category</label>
-          <input
-            id="category"
-            type="text"
-            value="{{ .post.Category }}"
+          <label>Upload Image</label>
+          <label for="blog-img" class="blog-img-upload">Upload Image</label>
+          <input type="file" id="blog-img" name="image" accept="image/png, image/jpeg" hidden />
+          <label for="summary">Summary</label>
+          <textarea
+            id="summary"
+            name="summary"
+            rows="30"
             required
-          />
+          />{{.post.Summary}}</textarea>
           <label for="tags">Tags</label>
           <div id="tags"></div>
           <button id="submit" type="submit">Update Post</button>
@@ -39,7 +42,7 @@
         const data = {
           title: document.getElementById("blogtitle").value,
           content: document.getElementById("blogbody").value,
-          category: document.getElementById("category").value,
+          summary: document.getElementById("summary").value,
           tags: tags,
         };
         const httpMethod = postID === "0" ? "POST" : "PUT";

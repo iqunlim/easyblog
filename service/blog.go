@@ -13,11 +13,15 @@ import (
 
 var (
 	AllBlogFields = []string{
-		"ID", "CreatedAt", "UpdatedAt", "DeletedAt", "Title", "Content", "Category", "Tags",
+		"ID", "CreatedAt", "UpdatedAt", "DeletedAt", "Title", "Content", "Summary", "ImageUrl", "Tags",
 	}
 
 	TitleOnly = []string{
 		"ID", "CreatedAt", "UpdatedAt", "DeletedAt", "Title", "Tags",
+	}
+
+	SummaryCard = []string{
+		"ID", "CreatedAt", "UpdatedAt", "DeletedAt", "Title", "Tags", "Summary", "ImageUrl",
 	}
 )
 
@@ -75,7 +79,7 @@ func (b *BlogStandard) Update(ctx context.Context, id int, blog *model.BlogPost)
 
 		updatingPost.Summary = blog.Summary
 
-		updatingPost.ImageURL = blog.ImageURL
+		updatingPost.ImageUrl = blog.ImageUrl
 
 		log.Println("Updated: ", updated)
 		return updated, nil

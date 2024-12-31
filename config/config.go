@@ -70,6 +70,6 @@ var (
 	// REGISTER is the variable. Defaults to "false".
 	// Set to "true" to allow registrations.
 	// Currently, it's best to run this once and then never again
-	RegisterAllowed = GetEnvWithDefault("REGISTER", "false")
+	RegisterAllowed = GetEnvWithDefault("REGISTER", "true")
 
 )

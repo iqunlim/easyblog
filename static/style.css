@@ -247,9 +247,22 @@ button {
 
 input[type="text"]:focus-visible,
 input[type="password"]:focus-visible,
+input[type="file"]:focus-visible,
 button:focus-visible,
 textarea:focus-visible {
   outline: solid 2px white;
+}
+
+label.blog-img-upload {
+  background-color: inherit;
+  border: solid 1px #94a3b8;
+  width: fit-content;
+  color: white;
+  padding: 10px 20px;
+  font-family: sans-serif;
+  border-radius: 50rem;
+  cursor: pointer;
+  margin-top: 1rem;
 }
 
 button {
@@ -305,7 +318,7 @@ form#blog-information {
   padding: 1rem;
 }
 
-textarea#blogbody {
+form#blog-information textarea {
   padding: 1rem;
   border-radius: 6px;
   color: white;
