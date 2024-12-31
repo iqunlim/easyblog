@@ -1,18 +1,17 @@
 {{define "post"}}
 <div class="post">
-  <h1>{{ .Title }}</h1>
+  <h1>{{ .post.Title }}</h1>
   <hr />
   <p class="infoblock">
-    {{ $x := .CreatedAt | formatTimeToString }} {{ $y := .UpdatedAt |
+    {{ $x := .post.CreatedAt | formatTimeToString }} {{ $y := .post.UpdatedAt |
     formatTimeToString }} Posted: {{ $x }} {{ if ne $x $y }}(Updated: {{ $y
-    }}){{end}}<br /><br />
-    Category: {{ .Category }}
+    }}){{end}}
   </p>
   <hr />
-  <div class="content">{{ .Content | formatAsHTML }}</div>
+  <div class="content">{{ .post.Content | formatAsHTML }}</div>
   <hr />
   <div class="tag">
-    Tags: {{ range .Tags}}
+    Tags: {{ range .post.Tags}}
     <a class="tag" href="/posts?term={{ . }}">{{ . }}</a>
     {{ end }}
   </div>

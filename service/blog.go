@@ -131,7 +131,7 @@ func (b *BlogStandard) GetAll(ctx context.Context, params string, htmlformat boo
 
 
 func (b *BlogStandard) GetAllNoContent(ctx context.Context) ([]*model.BlogPost, error) {
-	return b.repository.GetAll(ctx, TitleOnly)
+	return b.repository.GetAll(ctx, SummaryCard)
 }
 
 

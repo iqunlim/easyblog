@@ -128,11 +128,9 @@ func (w *WebHandlerImpl) PostsByIDWebHandler(c *gin.Context) {
 			return
 		}
 	}
-	data["title"] = ret.Title 
-	data["CreatedAt"] = ret.CreatedAt
-	data["UpdatedAt"] = ret.UpdatedAt
-	data["Content"] = ret.Content 
-	data["Tags"] = ret.Tags
+
+	data["post"] = ret;
+
 
 	c.HTML(http.StatusOK, "post.html",data)
 }
