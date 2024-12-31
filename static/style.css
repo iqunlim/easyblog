@@ -213,6 +213,10 @@ a.tag:hover {
   gap: 5px;
 }
 
+.menu-square.big-square {
+  width: 50%;
+}
+
 .login-form {
   display: flex;
   flex-direction: column;
@@ -243,7 +247,8 @@ button {
 
 input[type="text"]:focus-visible,
 input[type="password"]:focus-visible,
-button:focus-visible {
+button:focus-visible,
+textarea:focus-visible {
   outline: solid 2px white;
 }
 
@@ -289,4 +294,21 @@ button:hover {
 .new-post {
   text-decoration: underline;
   font-size: 1.5rem;
+}
+
+/* Editor */
+form#blog-information {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  padding: 1rem;
+}
+
+textarea#blogbody {
+  padding: 1rem;
+  border-radius: 6px;
+  color: white;
+  background-color: inherit;
+  width: 100%;
 }

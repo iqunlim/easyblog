@@ -56,8 +56,9 @@ func (t Tags) Value() (driver.Value, error) {
 type BlogPost struct {
 	gorm.Model
 	Title string `gorm:"type:VARCHAR(255);not null" json:"title" form:"title"`
+	ImageURL string `gorm:"type:VARCHAR(255);not null" json:"imgurl" form:"imgurl"`
 	Content string `gorm:"type:TEXT;not null" json:"content" form:"content"` 
-	Category string `gorm:"type:VARCHAR(255);not null" json:"category" form:"category"`
+	Summary string `gorm:"type:TEXT;not null" json:"summary" form:"summary"`
 	Tags Tags `gorm:"type:VARCHAR(255);" json:"tags" form:"tags"`
 }
 

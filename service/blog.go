@@ -68,15 +68,15 @@ func (b *BlogStandard) Update(ctx context.Context, id int, blog *model.BlogPost)
 			updated = true
 		}
 
-		if updatingPost.Category != blog.Category && blog.Category != "" {
-			updatingPost.Category = blog.Category
-			log.Println("Category updated")
-			updated = true
-		}
 		if blog.Tags != nil {
 			updatingPost.Tags = blog.Tags
 			updated = true
 		}
+
+		updatingPost.Summary = blog.Summary
+
+		updatingPost.ImageURL = blog.ImageURL
+
 		log.Println("Updated: ", updated)
 		return updated, nil
 	}

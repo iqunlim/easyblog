@@ -2,32 +2,34 @@
 <html lang="">
   {{ template "header" . }}
   <body>
-    {{ template "banner" . }}
+    {{ template "nav" . }}
     <div class="container">
-      <div class="post">
-        <label for="blogtitle">Title</label><br />
-        <input
-          id="blogtitle"
-          name="title"
-          type="text"
-          value="{{ .post.Title }}"
-          required
-        />
-        <br />
-        <textarea id="blogbody" name="content" rows="50" required>
+      {{ template "banner" . }}
+      <div class="menu-square big-square">
+        <form id="blog-information">
+          <label for="blogtitle">Title</label>
+          <input
+            id="blogtitle"
+            name="title"
+            type="text"
+            value="{{ .post.Title }}"
+            required
+          />
+          <label for="blogbody">Content</label>
+          <textarea id="blogbody" name="content" rows="50" required>
 {{ .post.Content }}</textarea
-        ><br />
-        <label for="category">Category</label><br />
-        <input
-          id="category"
-          type="text"
-          value="{{ .post.Category }}"
-          required
-        /><br />
-        <label for="tags">Tags</label><br />
-        <div id="tags"></div>
-        <br />
-        <input id="submit" type="submit" type="button" value="Update Post" />
+          >
+          <label for="category">Category</label>
+          <input
+            id="category"
+            type="text"
+            value="{{ .post.Category }}"
+            required
+          />
+          <label for="tags">Tags</label>
+          <div id="tags"></div>
+          <button id="submit" type="submit">Update Post</button>
+        </form>
       </div>
     </div>
     <script>
@@ -91,6 +93,8 @@
         const t = "{{range .post.Tags }}{{ . }}%{{ end }}";
         tags = t.split("%").filter((tag) => tag !== "");
         setTags();
+        const form = document.getElementById("blog-information");
+        form.addEventListener("submit", (e) => e.preventDefault());
         document.getElementById("submit").onclick = UpdatePost;
       }
       window.onload = init;

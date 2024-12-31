@@ -20,14 +20,12 @@ var (
 	FakeBlogPost = &model.BlogPost{
 		Title:    "Test",
 		Content:  "TestTestTest",
-		Category: "Test",
 		Tags:     model.Tags{"Tech", "Test"},
 	}
 
 	FakeBlogPost2 = &model.BlogPost{
 		Title:    "Test2",
 		Content:  "TestTest",
-		Category: "Test2",
 		Tags:     model.Tags{"Test"},
 	}
 
