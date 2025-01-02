@@ -130,6 +130,7 @@ func (w *WebHandlerImpl) PostsByIDWebHandler(c *gin.Context) {
 	}
 
 	data["post"] = ret;
+	data["title"] = ret.Title
 
 
 	c.HTML(http.StatusOK, "post.html",data)

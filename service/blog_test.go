@@ -17,7 +17,7 @@ func TestBlogStandard_GetAllNoContent(t *testing.T) {
 
 
 	sv := NewBlogService(mockrepository)
-	mockrepository.EXPECT().GetAll(ctx, TitleOnly).Return([]*model.BlogPost{}, nil)
+	mockrepository.EXPECT().GetAll(ctx, SummaryCard).Return([]*model.BlogPost{}, nil)
 	x, err := sv.GetAllNoContent(ctx)
 	if err != nil {
 		t.Fatalf("Error in Test blogservice.GetAll: %s", err)

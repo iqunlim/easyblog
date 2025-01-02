@@ -1,0 +1,9 @@
+packages:
+  github.com/iqunlim/easyblog:
+    with-expecter: True
+    config:
+      recursive: True
+      filename: "mock_{{.InterfaceNameLower}}.go"
+      dir: "{{.InterfaceDir}}"
+      mockname: "Mock{{.InterfaceName}}"
+      all: True

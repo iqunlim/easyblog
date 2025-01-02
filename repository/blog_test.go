@@ -11,17 +11,18 @@ import (
 )
 var (
 	AllBlogFields = []string{
-		"ID", "CreatedAt", "UpdatedAt", "DeletedAt", "Title", "Content", "Category", "Tags",
+		"ID", "CreatedAt", "UpdatedAt", "DeletedAt", "Title", "Content", "Summary", "ImageUrl", "Tags",
 	}
 
 	TitleOnly = []string{
-		"ID", "CreatedAt", "UpdatedAt", "DeletedAt", "Title",
+		"ID", "CreatedAt", "UpdatedAt", "DeletedAt", "Title", "Tags",
 	}
 
-	AllBlogRows = []string{
-		"id","created_at","updated_at","deleted_at","title","content","category","tags",
+	SummaryCard = []string{
+		"ID", "CreatedAt", "UpdatedAt", "DeletedAt", "Title", "Tags", "Summary", "ImageUrl",
 	}
 )
+
 
 func NewMockDB(t *testing.T) (*gorm.DB, sqlmock.Sqlmock) {
 	db, mock, err := sqlmock.New()
@@ -42,8 +43,8 @@ func TestBlogRepositoryImpl_GetAll(t *testing.T) {
 
 	blogrepo := NewBlogRepository(gdb)
 
-	mock.ExpectQuery("SELECT `id`,`created_at`,`updated_at`,`deleted_at`,`title`,`content`,`category`,`tags` FROM `blog_posts` WHERE `blog_posts`.`deleted_at` IS NULL").
-	WillReturnRows(sqlmock.NewRows(AllBlogRows))
+	mock.ExpectQuery("SELECT `id`,`created_at`,`updated_at`,`deleted_at`,`title`,`content`,`summary`,`image_url`,`tags` FROM `blog_posts` WHERE `blog_posts`.`deleted_at` IS NULL").
+	WillReturnRows(sqlmock.NewRows(AllBlogFields))
 	res, err := blogrepo.GetAll(context.Background(), AllBlogFields)
 	if err != nil {
 		t.Fatalf("Error in TestingBlogRepository_GetAll, %s", err)

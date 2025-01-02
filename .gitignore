@@ -2,4 +2,4 @@ test.db
 .hidden/
 .env
 utils/
-.mockery.yaml
+mockery
