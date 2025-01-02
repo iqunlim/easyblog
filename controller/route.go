@@ -8,6 +8,7 @@ import (
 
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
+	"github.com/iqunlim/easyblog/config"
 	"github.com/iqunlim/easyblog/model"
 	"github.com/iqunlim/easyblog/repository"
 	"github.com/iqunlim/easyblog/service"
@@ -79,7 +80,12 @@ func CreateAPI() (*gin.Engine, error) {
 
 	blogRep := repository.NewBlogRepository(db)
 	blogSvc := service.NewBlogService(blogRep)
-	blogHandler := NewBlogHandler(blogSvc)
+
+	imageRep := repository.NewImageRepositoryLocalhost(config.ProjectRoot + "/static/files/")
+	imageSvc := service.NewImageService(imageRep)
+
+
+	blogHandler := NewBlogHandler(blogSvc, imageSvc)
 
 	webHandler := NewWebHandler(blogSvc)
 
@@ -93,6 +99,7 @@ func CreateAPI() (*gin.Engine, error) {
 	// Static file handling for the webserver portion
 	r.LoadHTMLGlob("static/template/*.html")
 	r.Static("/static", "./static")
+	r.MaxMultipartMemory = 20 << 20 //20 MB
 
 
 	// API Endpoints
@@ -120,6 +127,7 @@ func CreateAPI() (*gin.Engine, error) {
 	requiresAuth.DELETE("/posts/:id", blogHandler.handleBlogPostDelete)
 	requiresAuth.POST("/posts", blogHandler.handleBlogPostPost)
 	requiresAuth.PUT("/posts/:id", blogHandler.handleBlogPostUpdate)
+	r.POST("/posts/image", blogHandler.handleBlogImageUpload)
 	return r, nil
 }
 

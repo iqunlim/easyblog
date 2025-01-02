@@ -16,15 +16,18 @@ type BlogHandler interface {
 	handleBlogPostPost(*gin.Context)
 	handleBlogPostUpdate(*gin.Context)
 	handleBlogPostDelete(*gin.Context)
+	handleBlogImageUpload(*gin.Context)
 }
 
 type BlogHandlerImpl struct {
 	blogservice service.BlogService
+	imageservice service.ImageHandlerService
 }
 
-func NewBlogHandler(blogservice service.BlogService) BlogHandler {
+func NewBlogHandler(blogservice service.BlogService, imageservice service.ImageHandlerService) BlogHandler {
 	return &BlogHandlerImpl{
 		blogservice: blogservice,
+		imageservice: imageservice,
 	}
 }
 
@@ -143,3 +146,21 @@ func (b *BlogHandlerImpl) handleBlogPostGetAll(c *gin.Context) {
 	// Stage 2: Consider pagination
 }
 
+func (b *BlogHandlerImpl) handleBlogImageUpload(c *gin.Context) {
+
+
+	app := Gin{C: c}
+	file, err := c.FormFile("file")
+	if err != nil {
+		app.Response(400, false, "Malformed Request", nil)
+	}
+
+	ret, err := b.imageservice.Upload(c, file)
+	if err != nil {
+		app.Response(500, false, "Internal Server Error", err.Error())
+	}
+	c.SaveUploadedFile(file, ".")
+
+	app.Response(200, true, "Success", gin.H{ "filepath": ret})
+
+}

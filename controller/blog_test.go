@@ -1,10 +1,15 @@
 package controller
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
+	"io"
+	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -43,9 +48,10 @@ func TestBlogHandlerImpl_handleBlogPostGet(t *testing.T) {
 
 	// Set up
 	sv := service.NewMockBlogService(t)
+	img := service.NewMockImageHandlerService(t)
 	w := httptest.NewRecorder()
 	router := gin.New()
-	b := NewBlogHandler(sv)
+	b := NewBlogHandler(sv, img)
 	router.GET("/api/v1/posts/:id", b.handleBlogPostGet)
 
 	// Test expected request
@@ -90,9 +96,10 @@ func TestBlogHandlerImpl_handleBlogPostPost(t *testing.T) {
 
 	// Set up
 	sv := service.NewMockBlogService(t)
+	img := service.NewMockImageHandlerService(t)
 	w := httptest.NewRecorder()
 	router := gin.New()
-	b := NewBlogHandler(sv)
+	b := NewBlogHandler(sv, img)
 	router.POST("/api/v1/posts", b.handleBlogPostPost)
 
 	// Test expected response
@@ -153,9 +160,10 @@ func TestBlogHandlerImpl_handleBlogPostGetAll(t *testing.T) {
 
 	// Set up
 	sv := service.NewMockBlogService(t)
+	img := service.NewMockImageHandlerService(t)
 	w := httptest.NewRecorder()
 	router := gin.New()
-	b := NewBlogHandler(sv)
+	b := NewBlogHandler(sv, img)
 	router.GET("/api/v1/posts", b.handleBlogPostGetAll)
 
 	//Test expected with no query term
@@ -194,9 +202,10 @@ func TestBlogHandlerImpl_handleBlogPostGetAll(t *testing.T) {
 func TestBlogHandlerImpl_handleBlogPostDelete(t *testing.T) {
 	// Set up
 	sv := service.NewMockBlogService(t)
+	img := service.NewMockImageHandlerService(t)
 	w := httptest.NewRecorder()
 	router := gin.New()
-	b := NewBlogHandler(sv)
+	b := NewBlogHandler(sv, img)
 	router.DELETE("/api/v1/posts/:id", b.handleBlogPostDelete)
 
 	// Test no ID given
@@ -244,9 +253,11 @@ func TestBlogHandlerImpl_handleBlogPostUpdate(t *testing.T) {
 
 	// Set up
 	sv := service.NewMockBlogService(t)
+
+	img := service.NewMockImageHandlerService(t)
 	w := httptest.NewRecorder()
 	router := gin.New()
-	b := NewBlogHandler(sv)
+	b := NewBlogHandler(sv, img)
 	router.PUT("/api/v1/posts/:id", b.handleBlogPostUpdate)
 
 	// Test Expected
@@ -318,4 +329,55 @@ func TestBlogHandlerImpl_handleBlogPostUpdate(t *testing.T) {
 
 	assert.Equal(t, http.StatusInternalServerError, w.Code)
 
+}
+
+func TestBlogHandlerImpl_handleBlogImageUpload(t *testing.T) {
+
+	sv := service.NewMockBlogService(t)
+	img := service.NewMockImageHandlerService(t)
+
+	// Create a test file
+	tempFile, err := os.CreateTemp("", "test.txt")
+	if err != nil {
+			t.Fatal("Failed to create temporary file:", err)
+	}
+	defer os.Remove(tempFile.Name())
+	_, err = tempFile.Write([]byte("Test file content"))
+	if err != nil {
+			t.Fatal("Failed to write to temporary file:", err)
+	}
+	tempFile.Close()
+
+
+	body := &bytes.Buffer{}
+	writer := multipart.NewWriter(body)
+	writer.WriteField("filename", "test.txt")
+
+	part, err := writer.CreateFormFile("file", filepath.Base(tempFile.Name()))
+
+	if err != nil {
+		t.Fatal("Failed to create form file:", err)
+	}
+	file, err := os.Open(tempFile.Name())
+	if err != nil {
+			t.Fatal("Failed to open temporary file:", err)
+	}
+	defer file.Close()
+	_, err = io.Copy(part, file)
+	if err != nil {
+			t.Fatal("Failed to copy file content:", err)
+	}
+	err = writer.Close()
+	if err != nil {
+			t.Fatal("Failed to close multipart writer:", err)
+	}
+
+	img.EXPECT().Upload(mock.Anything, mock.Anything).Return("test.txt", nil)
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("POST", "/posts/image", body)
+	req.Header.Set("Content-Type", writer.FormDataContentType())
+	router := gin.New()
+	b := NewBlogHandler(sv, img)
+	router.POST("/posts/image", b.handleBlogImageUpload)
+	router.ServeHTTP(w, req)
 }

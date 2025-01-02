@@ -1,5 +1,103 @@
+# User-defined ignores go here
 test.db
 .hidden/
 .env
 utils/
 mockery
+easyblog
+
+# Go boilerplate
+# Compiled object files
+*.a
+*.o
+*.so
+
+# Executables
+*.exe
+*.out
+
+# Object files from various build systems
+*.obj
+*.ko
+
+# Debug files
+*.dSYM
+*.gdb
+*.prof
+
+# Test binary, cache and coverage files
+_test
+*.test
+*.cover
+*.coverprofile
+
+# Directory for generated code
+.gen
+
+# Go build cache
+vendor/modules.txt
+
+# IDE files
+*.iml
+*.idea
+*.vscode/
+
+# Local configuration files
+.DS_Store
+.gitattributes
+.gitignore
+.gitmodules
+docker-compose.yml
+docker-compose.override.yml
+
+# Log files
+*.log
+*.err
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# OS specific files
+.classpath
+.project
+.settings
+.mvn/wrapper/maven-wrapper.jar
+
+# Build tools
+gradlew
+gradlew.bat
+
+# Editor files
+*.swp
+*.bak
+
+# IDE files
+*.suo
+*.user
+*.sln
+*.csproj
+*.vspscc
+
+# Binary files
+*.zip
+*.rar
+*.gz
+*.tar
+*.tgz
+*.bz2
+*.7z
+*.dmg
+*.iso
+*.exe.manifest
+*.dll
+
+# Secrets
+.env
+.env.*
+
+# Coverage reports
+coverage.xml
+
+# Generated files
+proto/

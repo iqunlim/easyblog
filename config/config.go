@@ -3,6 +3,7 @@ package config
 import (
 	"log"
 	"os"
+	"path"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -27,9 +28,22 @@ func GetEnvWithWarning(key string, fallback string) string {
 	return v
 }
 
+func GetProjectRoot() string {
+	e, err := os.Executable()
+	if err != nil {
+		panic(err)
+	}
+	path := path.Dir(e)
+	log.Println("Project Root Path:", path)
+	return path
+}
+
+
 
 var (
 	
+	ProjectRoot = GetProjectRoot()
+
 	Domain = GetEnvWithWarning("DOMAIN", "localhost")
 
 	// CORS Config.
