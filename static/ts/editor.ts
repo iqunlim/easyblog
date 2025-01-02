@@ -60,6 +60,8 @@ class Editor {
       summary: formData.get("summary"),
     };
     //Image data will have to be sent in its own fetch and returned with a url
+    // if image name is null then set to default image (where to store this config?)
+    // else set to /fs/<image uuid>.<image type>
     // before? that seems quite complicated...
     const dataToSend = JSON.stringify(dataObj);
     // TODO: Verify non-nulls and throw errors
@@ -72,19 +74,6 @@ class Editor {
       body: dataToSend,
     }).then(() => (window.location.href = "/admin"));
   }
-}
-
-class TagsDiv2 extends HTMLDivElement {
-  static observedAttributes = ["tags"];
-  constructor() {
-    super();
-  }
-
-  add() {}
-
-  del() {}
-
-  set() {}
 }
 
 class TagsDiv {
@@ -123,7 +112,7 @@ class TagsDiv {
     this.tagsDivElement.appendChild(this.createAddButton());
   }
 
-  createTagButton(tag: string) {
+  private createTagButton(tag: string) {
     let newTagElement = document.createElement("button");
     newTagElement.addEventListener("click", (e) => e.preventDefault());
     newTagElement.textContent = `- ${tag}`;
@@ -131,7 +120,7 @@ class TagsDiv {
     return newTagElement;
   }
 
-  createAddButton() {
+  private createAddButton() {
     let newTagElement = document.createElement("button");
     newTagElement.addEventListener("click", (e) => e.preventDefault());
     newTagElement.className = "tag-add";
