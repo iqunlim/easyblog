@@ -19,10 +19,12 @@
           <textarea id="blogbody" name="content" rows="50" required>
 {{ .post.Content }}</textarea
           >
-          <label>Upload Image</label>
-          <label for="blog-img" class="blog-img-upload">Upload Image</label>
-          <input type="file" id="blog-img" name="image" accept="image/png, image/jpeg" hidden />
-          <label for="summary">Summary</label>
+            <label>Upload Image</label>
+          <div class="file-upload">
+            <input type="file" id="blog-img" name="image" accept="image/png, image/jpeg" hidden />
+            <label for="blog-img" class="blog-img-upload">Upload Image</label><span id="blog-img-file-chosen">No file chosen</span>
+          </div>
+            <label for="summary">Summary</label>
           <textarea
             id="summary"
             name="summary"
@@ -35,72 +37,7 @@
         </form>
       </div>
     </div>
-    <script>
-      let tags = [];
-      async function UpdatePost() {
-        const postID = "{{ .post.ID }}";
-        const data = {
-          title: document.getElementById("blogtitle").value,
-          content: document.getElementById("blogbody").value,
-          summary: document.getElementById("summary").value,
-          tags: tags,
-        };
-        const httpMethod = postID === "0" ? "POST" : "PUT";
-        dataToSend = JSON.stringify(data);
-        fetch("/admin/posts" + (postID > 0 ? "/" + postID : ""), {
-          credentials: "same-origin",
-          mode: "same-origin",
-          method: httpMethod,
-          headers: { "Content-Type": "application/json" },
-          body: dataToSend,
-        }).then(() => (window.location.href = "/admin"));
-      }
-      async function setTags() {
-        console.log(tags);
-        let s = "";
-        for (let i = 0; i < tags.length; i++) {
-          s =
-            s +
-            tags[i] +
-            `<input class="deltag" type="button" value="-" onclick="delTag(${i})"/ >, `;
-        }
-        if (s === "") {
-          s = '<div class="warning">At least one tag is required</div>';
-        }
-        s +=
-          '<input class="addtag" type="button" value="+" onclick="addTag()" />';
-
-        document.getElementById("tags").innerHTML = s;
-      }
-
-      async function addTag() {
-        let val = prompt("Enter tag", "");
-
-        if (val !== "") {
-          tags.push(val);
-          setTags();
-        }
-      }
-
-      async function delTag(i) {
-        let val = tags[i];
-        const arrayWithoutI = tags.filter(function (e) {
-          return val !== e;
-        });
-        tags = arrayWithoutI;
-        setTags();
-      }
-
-      function init() {
-        tags = [];
-        const t = "{{range .post.Tags }}{{ . }}%{{ end }}";
-        tags = t.split("%").filter((tag) => tag !== "");
-        setTags();
-        const form = document.getElementById("blog-information");
-        form.addEventListener("submit", (e) => e.preventDefault());
-        document.getElementById("submit").onclick = UpdatePost;
-      }
-      window.onload = init;
-    </script>
+    <script type="text/javascript" src="/static/js/editor.js"></script>
+    <script>initialize("{{ range .post.Tags }}{{ . }}%{{end}}", "{{ .post.ID }}")</script>
   </body>
 </html>

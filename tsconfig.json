@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "es2023", // or your desired target (e.g., "es6", "es2015")
+    "module": "ESNext", // or your desired module system (e.g., "es2015", "commonjs", "amd")
+    "outDir": "./static/js", // Output directory for compiled JavaScript files
+    "sourceMap": true, // Generate source maps for debugging
+    "strict": true, // Enable strict type checking
+    "noImplicitAny": true, // Prevent implicit any types
+    "noImplicitThis": true, // Prevent implicit 'this' references
+    "strictNullChecks": true, // Enable strict null checks
+    "noUnusedLocals": true, // Warn on unused local variables
+    "noUnusedParameters": true, // Warn on unused parameters
+    "noImplicitReturns": true, // Warn on missing return statements
+    "noFallthroughCasesInSwitch": true, // Warn on missing break statements in switch cases
+    "skipLibCheck": true // Skip type checking for library files
+  },
+  "include": [
+    "**/*.ts" // Include all TypeScript files in all subdirectories
+  ],
+  "exclude": [
+    "node_modules" // Exclude node_modules directory
+  ]
+}
