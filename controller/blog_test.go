@@ -372,7 +372,7 @@ func TestBlogHandlerImpl_handleBlogImageUpload(t *testing.T) {
 			t.Fatal("Failed to close multipart writer:", err)
 	}
 
-	img.EXPECT().Upload(mock.Anything, mock.Anything).Return("test.txt", nil)
+	img.EXPECT().Upload(mock.Anything, mock.Anything, mock.Anything).Return("test.txt", nil)
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/posts/image", body)
 	req.Header.Set("Content-Type", writer.FormDataContentType())

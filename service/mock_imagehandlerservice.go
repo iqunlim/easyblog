@@ -130,9 +130,9 @@ func (_c *MockImageHandlerService_Download_Call) RunAndReturn(run func(context.C
 	return _c
 }
 
-// Upload provides a mock function with given fields: ctx, fileReader
-func (_m *MockImageHandlerService) Upload(ctx context.Context, fileReader *multipart.FileHeader) (string, error) {
-	ret := _m.Called(ctx, fileReader)
+// Upload provides a mock function with given fields: ctx, fileBody, fileReader
+func (_m *MockImageHandlerService) Upload(ctx context.Context, fileBody io.Reader, fileReader *multipart.FileHeader) (string, error) {
+	ret := _m.Called(ctx, fileBody, fileReader)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Upload")
@@ -140,17 +140,17 @@ func (_m *MockImageHandlerService) Upload(ctx context.Context, fileReader *multi
 
 	var r0 string
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, *multipart.FileHeader) (string, error)); ok {
-		return rf(ctx, fileReader)
+	if rf, ok := ret.Get(0).(func(context.Context, io.Reader, *multipart.FileHeader) (string, error)); ok {
+		return rf(ctx, fileBody, fileReader)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, *multipart.FileHeader) string); ok {
-		r0 = rf(ctx, fileReader)
+	if rf, ok := ret.Get(0).(func(context.Context, io.Reader, *multipart.FileHeader) string); ok {
+		r0 = rf(ctx, fileBody, fileReader)
 	} else {
 		r0 = ret.Get(0).(string)
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, *multipart.FileHeader) error); ok {
-		r1 = rf(ctx, fileReader)
+	if rf, ok := ret.Get(1).(func(context.Context, io.Reader, *multipart.FileHeader) error); ok {
+		r1 = rf(ctx, fileBody, fileReader)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -165,14 +165,15 @@ type MockImageHandlerService_Upload_Call struct {
 
 // Upload is a helper method to define mock.On call
 //   - ctx context.Context
+//   - fileBody io.Reader
 //   - fileReader *multipart.FileHeader
-func (_e *MockImageHandlerService_Expecter) Upload(ctx interface{}, fileReader interface{}) *MockImageHandlerService_Upload_Call {
-	return &MockImageHandlerService_Upload_Call{Call: _e.mock.On("Upload", ctx, fileReader)}
+func (_e *MockImageHandlerService_Expecter) Upload(ctx interface{}, fileBody interface{}, fileReader interface{}) *MockImageHandlerService_Upload_Call {
+	return &MockImageHandlerService_Upload_Call{Call: _e.mock.On("Upload", ctx, fileBody, fileReader)}
 }
 
-func (_c *MockImageHandlerService_Upload_Call) Run(run func(ctx context.Context, fileReader *multipart.FileHeader)) *MockImageHandlerService_Upload_Call {
+func (_c *MockImageHandlerService_Upload_Call) Run(run func(ctx context.Context, fileBody io.Reader, fileReader *multipart.FileHeader)) *MockImageHandlerService_Upload_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(*multipart.FileHeader))
+		run(args[0].(context.Context), args[1].(io.Reader), args[2].(*multipart.FileHeader))
 	})
 	return _c
 }
@@ -182,7 +183,7 @@ func (_c *MockImageHandlerService_Upload_Call) Return(_a0 string, _a1 error) *Mo
 	return _c
 }
 
-func (_c *MockImageHandlerService_Upload_Call) RunAndReturn(run func(context.Context, *multipart.FileHeader) (string, error)) *MockImageHandlerService_Upload_Call {
+func (_c *MockImageHandlerService_Upload_Call) RunAndReturn(run func(context.Context, io.Reader, *multipart.FileHeader) (string, error)) *MockImageHandlerService_Upload_Call {
 	_c.Call.Return(run)
 	return _c
 }

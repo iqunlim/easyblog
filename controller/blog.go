@@ -154,12 +154,16 @@ func (b *BlogHandlerImpl) handleBlogImageUpload(c *gin.Context) {
 	if err != nil {
 		app.Response(400, false, "Malformed Request", nil)
 	}
+	fileBody, err := file.Open()
+	defer fileBody.Close()
+	if err != nil {
+		app.Response(400, false, "Malformed Request", nil)
+	}
 
-	ret, err := b.imageservice.Upload(c, file)
+	ret, err := b.imageservice.Upload(c, fileBody, file)
 	if err != nil {
 		app.Response(500, false, "Internal Server Error", err.Error())
 	}
-	c.SaveUploadedFile(file, ".")
 
 	app.Response(200, true, "Success", gin.H{ "filepath": ret})
 

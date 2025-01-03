@@ -86,4 +86,8 @@ var (
 	// Currently, it's best to run this once and then never again
 	RegisterAllowed = GetEnvWithDefault("REGISTER", "true")
 
+	// Defines the number of megabytes that the image uploads are
+	// allowed to be. Defaults to 20 MB.
+	MaxImageSize = GetEnvWithDefault("IMAGE_MAX", "20")
+
 )

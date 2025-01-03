@@ -8,7 +8,7 @@ import (
 
 
 type ImageRepository interface {
-	Upload(ctx context.Context, fileReader io.ReadCloser, fileName string) (string, error)
+	Upload(ctx context.Context, fileReader io.Reader, fileName string) (string, error)
 	Delete(ctx context.Context, fileName string) error
 	Download(ctx context.Context, fileName string) (io.ReadCloser, error)
 }
@@ -26,20 +26,19 @@ func NewImageRepositoryLocalhost(basePath string) ImageRepository {
 	}
 }
 
-func (r *ImageRepositoryLocalhost) Upload(ctx context.Context, fileReader io.ReadCloser, fileName string) (string, error) {
+func (r *ImageRepositoryLocalhost) Upload(ctx context.Context, fileReader io.Reader, fileName string) (string, error) {
 
 	var filePath = r.basePath + fileName
 
 	file, err := os.Create(filePath)
 	if err != nil {
-		return "Failure", err
+		return "", err
 	}
-	defer fileReader.Close()
 	defer file.Close()
 
 	_, err = io.Copy(file, fileReader)
 	if err != nil {
-		return "Failure", err
+		return "", err
 	}
 	
 	return filePath, nil

@@ -129,7 +129,7 @@ func (_c *MockImageRepository_Download_Call) RunAndReturn(run func(context.Conte
 }
 
 // Upload provides a mock function with given fields: ctx, fileReader, fileName
-func (_m *MockImageRepository) Upload(ctx context.Context, fileReader io.ReadCloser, fileName string) (string, error) {
+func (_m *MockImageRepository) Upload(ctx context.Context, fileReader io.Reader, fileName string) (string, error) {
 	ret := _m.Called(ctx, fileReader, fileName)
 
 	if len(ret) == 0 {
@@ -138,16 +138,16 @@ func (_m *MockImageRepository) Upload(ctx context.Context, fileReader io.ReadClo
 
 	var r0 string
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, io.ReadCloser, string) (string, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, io.Reader, string) (string, error)); ok {
 		return rf(ctx, fileReader, fileName)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, io.ReadCloser, string) string); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, io.Reader, string) string); ok {
 		r0 = rf(ctx, fileReader, fileName)
 	} else {
 		r0 = ret.Get(0).(string)
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, io.ReadCloser, string) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, io.Reader, string) error); ok {
 		r1 = rf(ctx, fileReader, fileName)
 	} else {
 		r1 = ret.Error(1)
@@ -163,15 +163,15 @@ type MockImageRepository_Upload_Call struct {
 
 // Upload is a helper method to define mock.On call
 //   - ctx context.Context
-//   - fileReader io.ReadCloser
+//   - fileReader io.Reader
 //   - fileName string
 func (_e *MockImageRepository_Expecter) Upload(ctx interface{}, fileReader interface{}, fileName interface{}) *MockImageRepository_Upload_Call {
 	return &MockImageRepository_Upload_Call{Call: _e.mock.On("Upload", ctx, fileReader, fileName)}
 }
 
-func (_c *MockImageRepository_Upload_Call) Run(run func(ctx context.Context, fileReader io.ReadCloser, fileName string)) *MockImageRepository_Upload_Call {
+func (_c *MockImageRepository_Upload_Call) Run(run func(ctx context.Context, fileReader io.Reader, fileName string)) *MockImageRepository_Upload_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(io.ReadCloser), args[2].(string))
+		run(args[0].(context.Context), args[1].(io.Reader), args[2].(string))
 	})
 	return _c
 }
@@ -181,7 +181,7 @@ func (_c *MockImageRepository_Upload_Call) Return(_a0 string, _a1 error) *MockIm
 	return _c
 }
 
-func (_c *MockImageRepository_Upload_Call) RunAndReturn(run func(context.Context, io.ReadCloser, string) (string, error)) *MockImageRepository_Upload_Call {
+func (_c *MockImageRepository_Upload_Call) RunAndReturn(run func(context.Context, io.Reader, string) (string, error)) *MockImageRepository_Upload_Call {
 	_c.Call.Return(run)
 	return _c
 }
