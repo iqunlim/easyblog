@@ -37,7 +37,24 @@ func (g *Gin) Response(httpCode int, success bool, messagetext string, data any)
 		Message:     messagetext,
 		MessageBody: data,
 	})
-	return
+}
+
+func (g *Gin) MalformedResponse() {
+	g.C.JSON(400, APIResponse{
+		Code: 400,
+		Success: false,
+		Message: "Malformed Request",
+		MessageBody: nil,
+	})
+}
+
+func (g *Gin) InternalServerErrorResponse() {
+	g.C.JSON(500, APIResponse{
+		Code: 500,
+		Success: false,
+		Message: "Internal Server Error",
+		MessageBody: nil,
+	})
 }
 
 // Cache Control for static files

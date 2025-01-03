@@ -43,7 +43,7 @@ func (b *BlogHandlerImpl) handleBlogPostGet(c *gin.Context) {
 	app := Gin{C: c}
 	var id blogid
 	if err := c.ShouldBindUri(&id); err != nil {
-		app.Response(400, false, "Malformed Request", nil)
+		app.MalformedResponse()
 		return
 	}
 
@@ -54,7 +54,7 @@ func (b *BlogHandlerImpl) handleBlogPostGet(c *gin.Context) {
 			app.Response(404, false, "Post not Found", nil)
 			return
 		} else {
-			app.Response(500, false, "Internal Server Error", nil)
+			app.InternalServerErrorResponse()
 			//TODO: Log Error
 			return
 		}
@@ -68,13 +68,13 @@ func (b *BlogHandlerImpl) handleBlogPostPost(c *gin.Context) {
 	var blog model.BlogPost
 
 	if err := c.ShouldBind(&blog); err != nil {
-		app.Response(400, false, "Malformed Request", nil)
+		app.MalformedResponse()
 		return
 	}
 
 	res, err := b.blogservice.Post(c, &blog)
 	if err != nil {
-		app.Response(500, false, "Internal Server Error", nil)
+		app.InternalServerErrorResponse()
 		return
 	}
 
@@ -89,11 +89,11 @@ func (b *BlogHandlerImpl) handleBlogPostUpdate(c *gin.Context) {
 	var blog model.BlogPost
 	var id blogid
 	if err := c.ShouldBindUri(&id); err != nil {
-		app.Response(400, false, "Malformed Request", nil)
+		app.MalformedResponse()
 		return
 	}
 	if err := c.ShouldBind(&blog); err != nil {
-		app.Response(400, false, "Malformed Request", nil)
+		app.MalformedResponse()
 		return
 	}
 	if err := b.blogservice.Update(c, id.ID, &blog); err != nil {
@@ -102,7 +102,7 @@ func (b *BlogHandlerImpl) handleBlogPostUpdate(c *gin.Context) {
 			app.Response(404, false, fmt.Sprintf("Post %d not Found", id.ID), nil)
 			return
 		} else {
-			app.Response(500, false, "Internal Server Error", nil)
+			app.InternalServerErrorResponse()
 			return
 		}
 	}
@@ -114,7 +114,7 @@ func (b *BlogHandlerImpl) handleBlogPostDelete(c *gin.Context) {
 	app := Gin{C: c}
 	var id blogid
 	if err := c.ShouldBindUri(&id); err != nil {
-		app.Response(400, false, "Malformed Request", nil)
+		app.MalformedResponse()
 		return
 	}
 	if err := b.blogservice.Delete(c, id.ID); err != nil {
@@ -123,7 +123,7 @@ func (b *BlogHandlerImpl) handleBlogPostDelete(c *gin.Context) {
 			app.Response(404, false, fmt.Sprintf("Post %d not Found", id.ID), nil)
 			return
 		} else {
-			app.Response(500, false, "Internal Server Error", nil)
+			app.InternalServerErrorResponse()
 			return
 		}
 	}
@@ -139,7 +139,7 @@ func (b *BlogHandlerImpl) handleBlogPostGetAll(c *gin.Context) {
 	app := Gin{C: c}
 	posts, err := b.blogservice.GetAll(c, term, true)
 	if err != nil {
-		app.Response(500, false, "Internal Server Error", nil)
+		app.InternalServerErrorResponse()
 	}
 	app.Response(200, true, "Success", posts)
 	// TODO: 
@@ -152,17 +152,17 @@ func (b *BlogHandlerImpl) handleBlogImageUpload(c *gin.Context) {
 	app := Gin{C: c}
 	file, err := c.FormFile("file")
 	if err != nil {
-		app.Response(400, false, "Malformed Request", nil)
+		app.MalformedResponse()
 	}
 	fileBody, err := file.Open()
 	defer fileBody.Close()
 	if err != nil {
-		app.Response(400, false, "Malformed Request", nil)
+		app.MalformedResponse()
 	}
 
 	ret, err := b.imageservice.Upload(c, fileBody, file)
 	if err != nil {
-		app.Response(500, false, "Internal Server Error", err.Error())
+		app.InternalServerErrorResponse()
 	}
 
 	app.Response(200, true, "Success", gin.H{ "filepath": ret})
