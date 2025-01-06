@@ -5,6 +5,7 @@ utils/
 mockery
 easyblog
 /static/files/
+/static/js/
 
 # Go boilerplate
 # Compiled object files
