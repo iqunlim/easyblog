@@ -4,6 +4,14 @@
   margin: 0;
 }
 
+/* General Selectors */
+
+h1 {
+  color: white;
+  text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000,
+    -1px 1px 0 #000;
+}
+
 h2 {
   font-size: 2rem;
 }
@@ -30,6 +38,53 @@ body {
   width: 100vw;
   height: 100vh;
 }
+
+input[type="text"],
+input[type="password"],
+button {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border: solid 1px #94a3b8;
+  border-radius: 50rem;
+  color: white;
+  width: 100%;
+  height: 2.5rem;
+  background-color: inherit;
+}
+
+button {
+  min-width: 4rem;
+  max-width: fit-content;
+}
+
+input[type="text"]:focus-visible,
+input[type="password"]:focus-visible,
+input[type="file"]:focus-visible,
+button:focus-visible,
+textarea:focus-visible {
+  outline: solid 2px white;
+}
+
+textarea {
+  padding: 1rem;
+  border-radius: 6px;
+  border: solid 1px #94a3b8;
+  color: white;
+  background-color: inherit;
+  width: 100%;
+}
+button {
+  justify-content: center;
+}
+
+button:hover {
+  background-color: #94a3b8;
+  color: black;
+  border: solid 1px white;
+}
+/* Main Elements */
 
 #banner {
   margin: 10px 0px;
@@ -58,12 +113,6 @@ body {
   width: 100vw;
   height: 100px;
   padding: 1rem;
-}
-
-h1 {
-  color: white;
-  text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000,
-    -1px 1px 0 #000;
 }
 
 .nav .site-title {
@@ -232,34 +281,6 @@ a.tag:hover {
   font-weight: 700;
 }
 
-input[type="text"],
-input[type="password"],
-button {
-  display: flex;
-  align-items: center;
-  padding: 10px 20px;
-  font-size: 1rem;
-  border: solid 1px #94a3b8;
-  border-radius: 50rem;
-  color: white;
-  width: 100%;
-  height: 2.5rem;
-  background-color: inherit;
-}
-
-button {
-  min-width: 4rem;
-  max-width: fit-content;
-}
-
-input[type="text"]:focus-visible,
-input[type="password"]:focus-visible,
-input[type="file"]:focus-visible,
-button:focus-visible,
-textarea:focus-visible {
-  outline: solid 2px white;
-}
-
 label.blog-img-upload {
   background-color: inherit;
   border: solid 1px #94a3b8;
@@ -270,16 +291,6 @@ label.blog-img-upload {
   border-radius: 50rem;
   cursor: pointer;
   margin-top: 1rem;
-}
-
-button {
-  justify-content: center;
-}
-
-button:hover {
-  background-color: #94a3b8;
-  color: black;
-  border: solid 1px white;
 }
 
 /* Admin Page */
@@ -331,15 +342,6 @@ form#blog-information {
   padding: 1rem;
 }
 
-textarea {
-  padding: 1rem;
-  border-radius: 6px;
-  border: solid 1px #94a3b8;
-  color: white;
-  background-color: inherit;
-  width: 100%;
-}
-
 .blog-img-upload {
   margin-right: 10px;
 }
@@ -348,7 +350,9 @@ img#image-preview {
   width: 50%;
 }
 
-#tags {
+#tags,
+.tags {
   display: flex;
+  align-items: center;
   gap: 4px;
 }

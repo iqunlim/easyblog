@@ -24,7 +24,7 @@
             <input type="file" id="blog-img" name="image" accept="image/png, image/jpeg" hidden />
             <label for="blog-img" class="blog-img-upload">Upload Image</label><span id="blog-img-file-chosen">No file chosen</span>
           </div>
-            <div class="image-preview"><img id="image-preview" src="{{ .post.ImageUrl }}" /></div>
+            <div class="image-preview"><img id="image-preview" {{if .post.ImageUrl}}src="{{ .post.ImageUrl }}"{{end}} /></div>
             <label for="summary">Summary</label>
           <textarea class="summary"
             id="summary"

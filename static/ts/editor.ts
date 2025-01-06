@@ -18,6 +18,7 @@ interface APIImageResponse extends APIResponse {
   data: { filepath: string };
 }
 
+const DEFAULT_IMAGE = "/static/favicon.ico";
 // API Response interface
 
 function initialize(tags: string, postID: string) {
@@ -52,7 +53,16 @@ class Editor {
     this.imagePreview = <HTMLImageElement>(
       document.getElementById("image-preview")
     );
-    this.currentImageUrl = this.imagePreview.src;
+    console.log("imagePreview on initialization:", this.imagePreview.src);
+    if (
+      this.imagePreview.src === null ||
+      this.imagePreview.src === undefined ||
+      this.imagePreview.src === ""
+    ) {
+      this.currentImageUrl = DEFAULT_IMAGE;
+    } else {
+      this.currentImageUrl = this.imagePreview.src;
+    }
     // Set up event listener for image previews
     this.form.addEventListener("change", this.setupImageElement.bind(this));
 
@@ -70,7 +80,10 @@ class Editor {
 
     console.log(this.currentImageUrl);
     // If we didnt update the image don't put to the image updater api
-    if (this.currentImageUrl === this.imagePreview.src) {
+    if (
+      this.currentImageUrl === this.imagePreview.src ||
+      this.currentImageUrl === DEFAULT_IMAGE
+    ) {
       this.BlogPostDataPost(formData, this.currentImageUrl)
         .then(() => (window.location.href = "/admin"))
         .catch((error) => console.log(error));
@@ -96,6 +109,10 @@ class Editor {
       summary: formData.get("summary"),
       imageUrl: imageUrl,
     };
+    console.log("imageUrl:", dataObj.imageUrl);
+    if (dataObj.imageUrl === null || dataObj.imageUrl === "") {
+      dataObj.imageUrl = DEFAULT_IMAGE;
+    }
     const dataToSend = JSON.stringify(dataObj);
     const httpMethod = this.postID === 0 ? "POST" : "PUT";
     const response = await fetch(
@@ -137,12 +154,17 @@ class Editor {
   }
 
   private setupImageElement() {
-    if (this.imageBtn.files === null || this.imageBtn.files[0] === null) {
+    if (
+      this.imageBtn.files === null ||
+      this.imageBtn.files[0] === null ||
+      this.imageBtn.files[0] === undefined
+    ) {
       return;
     }
     const file = this.imageBtn.files[0];
     const reader = new FileReader();
     reader.onload = (event) => {
+      console.log(event.target);
       if (event.target === null || event.target.result === null) {
         throw new Error(
           "Error in setupImageElement, target or target result were null"
@@ -150,6 +172,7 @@ class Editor {
       }
       this.imagePreview.src = event.target?.result.toString();
     };
+    console.log(file);
     reader.readAsDataURL(file);
   }
 }

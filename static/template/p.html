@@ -1,5 +1,5 @@
 {{define "post"}}
-<div class="post">
+<div class="menu-square big-square">
   <h1>{{ .post.Title }}</h1>
   <hr />
   <p class="infoblock">
@@ -7,11 +7,10 @@
     formatTimeToString }} Posted: {{ $x }} {{ if ne $x $y }}(Updated: {{ $y
     }}){{end}}
   </p>
-  <hr />
-  <div class="content">{{ .post.Content | formatAsHTML }}</div>
-  <hr />
-  <div class="tag">
-    Tags: {{ range .post.Tags}}
+  <div class="post-content">{{ .post.Content | formatAsHTML }}</div>
+  <div class="tags">
+    <span>Tags:</span>
+    {{ range .post.Tags}}
     <a class="tag" href="/posts?term={{ . }}">{{ . }}</a>
     {{ end }}
   </div>
