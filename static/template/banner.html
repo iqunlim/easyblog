@@ -1,7 +1,3 @@
-{{ define "banner" }} {{ if .auth }}
-<div class="auth">
-  <a href="/logout">Log out</a><a href="/admin">Admin Panel</a>
-</div>
-{{end}}
+{{ define "banner" }}
 <div id="banner"><h1>{{ .Title }}</h1></div>
 {{end}}

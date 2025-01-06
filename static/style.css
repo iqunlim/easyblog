@@ -39,10 +39,9 @@ body {
 }
 
 .auth {
-  z-index: 1;
   display: flex;
   gap: 4px;
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
 }
@@ -50,6 +49,7 @@ body {
   background-color: #3f3f46;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
   display: flex;
+  position: relative;
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: space-between;

@@ -31,45 +31,43 @@ class Editor {
     tags;
     postID;
     tagsDiv;
+    form;
     constructor(tags, postID) {
         this.tags = tags;
         this.postID = Number(postID);
         this.tagsDiv = new TagsDiv(this.tags);
+        this.form = document.getElementById("blog-information");
     }
-    UpdatePost() {
-        const form = document.getElementById("blog-information");
-        const formData = new FormData(form);
+    async UpdatePost() {
+        Promise.all([this.BlogPostDataPost()])
+            .then(() => (window.location.href = "/admin"))
+            .catch((error) => console.log(error));
+    }
+    async BlogPostDataPost() {
+        const formData = new FormData(this.form);
         const dataObj = {
             tags: this.tagsDiv.tags,
             title: formData.get("title"),
             content: formData.get("content"),
             summary: formData.get("summary"),
         };
-        //Image data will have to be sent in its own fetch and returned with a url
-        // before? that seems quite complicated...
-        console.log(dataObj);
         const dataToSend = JSON.stringify(dataObj);
-        console.log(formData.get("image"));
-        return;
-        // TODO: Verify non-nulls and throw errors
         const httpMethod = this.postID === 0 ? "POST" : "PUT";
-        fetch("/admin/posts" + (this.postID > 0 ? "/" + this.postID : ""), {
+        const response = await fetch("/admin/posts" + (this.postID > 0 ? "/" + this.postID : ""), {
             credentials: "same-origin",
             mode: "same-origin",
             method: httpMethod,
             headers: { "Content-Type": "application/json" },
             body: dataToSend,
-        }).then(() => (window.location.href = "/admin"));
+        });
+        if (response.ok && (response.status === 200 || response.status === 201)) {
+            return Promise.resolve(response.json());
+        }
+        else {
+            return Promise.reject(new Error(`BlogPostDataPost request failed, response code ${response.status}`));
+        }
     }
-}
-class TagsDiv2 extends HTMLDivElement {
-    static observedAttributes = ["tags"];
-    constructor() {
-        super();
-    }
-    add() { }
-    del() { }
-    set() { }
+    async BlogPostImagePost() { }
 }
 class TagsDiv {
     tags;

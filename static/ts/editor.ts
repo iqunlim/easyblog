@@ -44,36 +44,52 @@ class Editor {
   tags: string[];
   postID: number;
   tagsDiv: TagsDiv;
+  form: HTMLFormElement;
   constructor(tags: string[], postID: string) {
     this.tags = tags;
     this.postID = Number(postID);
     this.tagsDiv = new TagsDiv(this.tags);
+    this.form = <HTMLFormElement>document.getElementById("blog-information");
   }
 
-  UpdatePost() {
-    const form = <HTMLFormElement>document.getElementById("blog-information");
-    const formData = new FormData(form);
+  async UpdatePost() {
+    Promise.all([this.BlogPostDataPost()])
+      .then(() => (window.location.href = "/admin"))
+      .catch((error) => console.log(error));
+  }
+
+  async BlogPostDataPost() {
+    const formData = new FormData(this.form);
     const dataObj: blogPostData = {
       tags: this.tagsDiv.tags,
       title: formData.get("title"),
       content: formData.get("content"),
       summary: formData.get("summary"),
     };
-    //Image data will have to be sent in its own fetch and returned with a url
-    // if image name is null then set to default image (where to store this config?)
-    // else set to /fs/<image uuid>.<image type>
-    // before? that seems quite complicated...
     const dataToSend = JSON.stringify(dataObj);
-    // TODO: Verify non-nulls and throw errors
     const httpMethod = this.postID === 0 ? "POST" : "PUT";
-    fetch("/admin/posts" + (this.postID > 0 ? "/" + this.postID : ""), {
-      credentials: "same-origin",
-      mode: "same-origin",
-      method: httpMethod,
-      headers: { "Content-Type": "application/json" },
-      body: dataToSend,
-    }).then(() => (window.location.href = "/admin"));
+    const response = await fetch(
+      "/admin/posts" + (this.postID > 0 ? "/" + this.postID : ""),
+      {
+        credentials: "same-origin",
+        mode: "same-origin",
+        method: httpMethod,
+        headers: { "Content-Type": "application/json" },
+        body: dataToSend,
+      }
+    );
+    if (response.ok && (response.status === 200 || response.status === 201)) {
+      return Promise.resolve(response.json());
+    } else {
+      return Promise.reject(
+        new Error(
+          `BlogPostDataPost request failed, response code ${response.status}`
+        )
+      );
+    }
   }
+
+  async BlogPostImagePost() {}
 }
 
 class TagsDiv {
