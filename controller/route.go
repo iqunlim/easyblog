@@ -144,7 +144,7 @@ func CreateAPI() (*gin.Engine, error) {
 	requiresAuth.DELETE("/posts/:id", blogHandler.handleBlogPostDelete)
 	requiresAuth.POST("/posts", blogHandler.handleBlogPostPost)
 	requiresAuth.PUT("/posts/:id", blogHandler.handleBlogPostUpdate)
-	r.POST("/posts/image", blogHandler.handleBlogImageUpload)
+	requiresAuth.POST("/posts/image", blogHandler.handleBlogImageUpload)
 	return r, nil
 }
 

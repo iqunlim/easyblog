@@ -114,6 +114,8 @@ section.postID img {
   width: 100%;
   height: 350px;
   border-bottom: solid 1px #94a3b8;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
 }
 
 section.postID .information {
@@ -314,6 +316,12 @@ button:hover {
   font-size: 1.5rem;
 }
 
+span.post-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* Editor */
 form#blog-information {
   display: flex;
@@ -334,6 +342,10 @@ textarea {
 
 .blog-img-upload {
   margin-right: 10px;
+}
+
+img#image-preview {
+  width: 50%;
 }
 
 #tags {

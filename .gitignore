@@ -1,10 +1,10 @@
 # User-defined ignores go here
 test.db
-.hidden/
 .env
 utils/
 mockery
 easyblog
+/static/files/
 
 # Go boilerplate
 # Compiled object files

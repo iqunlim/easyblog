@@ -41,7 +41,7 @@ func (r *ImageRepositoryLocalhost) Upload(ctx context.Context, fileReader io.Rea
 		return "", err
 	}
 	
-	return filePath, nil
+	return "/static/files/" + fileName, nil
 
 }
 
