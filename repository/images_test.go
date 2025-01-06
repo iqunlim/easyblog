@@ -17,13 +17,10 @@ func TestImageRepositoryLocalhostUpload_EXPECTED(t *testing.T) {
 
 	ret, err := repo.Upload(context.Background(), datastream, "file.txt")
 	
+	defer os.Remove(ret)
 	assert.NoError(t, err)
-	assert.Equal(t, ret, "./file.txt")
+	assert.Equal(t, ret, "/static/files/file.txt")
 
-	// Clean up uploaded file
-	if err := os.Remove(ret); err != nil {
-		t.Error(err)
-	}
 }
 
 func TestImageRepositoryLocalhostUpload_ERROR(t *testing.T) {
@@ -31,6 +28,7 @@ func TestImageRepositoryLocalhostUpload_ERROR(t *testing.T) {
 	repo := NewImageRepositoryLocalhost("badpath")
 	datastream := io.NopCloser(bytes.NewReader([]byte("test_img_data")))
 	_, err := repo.Upload(context.Background(), datastream, "file.txt")
+	defer os.Remove("file.txt")
 	assert.Error(t, err)
 }
 

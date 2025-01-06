@@ -351,9 +351,9 @@ func TestBlogHandlerImpl_handleBlogImageUpload(t *testing.T) {
 
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
-	writer.WriteField("filename", "test.txt")
+	writer.WriteField("file", "test.txt")
 
-	part, err := writer.CreateFormFile("file", filepath.Base(tempFile.Name()))
+	part, err := writer.CreateFormFile("image", filepath.Base(tempFile.Name()))
 
 	if err != nil {
 		t.Fatal("Failed to create form file:", err)
@@ -372,7 +372,7 @@ func TestBlogHandlerImpl_handleBlogImageUpload(t *testing.T) {
 			t.Fatal("Failed to close multipart writer:", err)
 	}
 
-	img.EXPECT().Upload(mock.Anything, mock.Anything, mock.Anything).Return("test.txt", nil)
+	img.EXPECT().Upload(mock.Anything, mock.Anything, mock.Anything).Return("/static/files/test.txt", nil)
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/posts/image", body)
 	req.Header.Set("Content-Type", writer.FormDataContentType())
@@ -380,4 +380,6 @@ func TestBlogHandlerImpl_handleBlogImageUpload(t *testing.T) {
 	b := NewBlogHandler(sv, img)
 	router.POST("/posts/image", b.handleBlogImageUpload)
 	router.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusCreated, w.Code)
 }
