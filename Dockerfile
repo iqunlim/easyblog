@@ -1,3 +1,15 @@
+FROM node:18-alpine AS typescript
+
+WORKDIR /app
+
+COPY . .
+
+RUN npm install -g typescript
+
+WORKDIR /app
+
+RUN ["tsc"]
+
 FROM golang:latest AS base
 
 FROM base AS dev
@@ -13,6 +25,10 @@ COPY go.mod go.sum ./
 RUN go mod download 
 
 COPY . .
+
+RUN mkdir -p "/app/static/js"
+
+COPY --from=typescript /app/static/js /app/static/js
 
 RUN go build . 
 
