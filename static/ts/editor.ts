@@ -53,7 +53,6 @@ class Editor {
     this.imagePreview = <HTMLImageElement>(
       document.getElementById("image-preview")
     );
-    console.log("imagePreview on initialization:", this.imagePreview.src);
     if (
       this.imagePreview.src === null ||
       this.imagePreview.src === undefined ||
@@ -78,7 +77,6 @@ class Editor {
   async UpdatePost() {
     const formData = new FormData(this.form);
 
-    console.log(this.currentImageUrl);
     // If we didnt update the image don't put to the image updater api
     if (
       this.currentImageUrl === this.imagePreview.src ||
@@ -109,7 +107,6 @@ class Editor {
       summary: formData.get("summary"),
       imageUrl: imageUrl,
     };
-    console.log("imageUrl:", dataObj.imageUrl);
     if (dataObj.imageUrl === null || dataObj.imageUrl === "") {
       dataObj.imageUrl = DEFAULT_IMAGE;
     }
@@ -147,7 +144,7 @@ class Editor {
         return response.json();
       } else {
         throw new Error(
-          `BlogPostDataPost request failed, response code ${response.status}`
+          `BlogPostImagePost request failed, response code ${response.status}`
         );
       }
     });

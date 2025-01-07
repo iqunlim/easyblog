@@ -6,6 +6,7 @@ mockery
 easyblog
 /static/files/
 /static/js/
+.vscode
 
 # Go boilerplate
 # Compiled object files

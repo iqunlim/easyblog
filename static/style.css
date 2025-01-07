@@ -7,6 +7,7 @@
 /* General Selectors */
 
 h1 {
+  font-size: 3rem;
   color: white;
   text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000,
     -1px 1px 0 #000;
@@ -14,6 +15,10 @@ h1 {
 
 h2 {
   font-size: 2rem;
+}
+
+h3 {
+  font-size: 1.5rem;
 }
 
 a {
@@ -254,6 +259,7 @@ a.tag:hover {
   width: 500px;
   height: fit-content;
   background-color: #18181b;
+  padding: 10px;
   color: white;
   font-family: "Inter", sans-serif;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
@@ -261,11 +267,11 @@ a.tag:hover {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 10px;
 }
 
 .menu-square.big-square {
-  width: 50%;
+  width: 70%;
 }
 
 .login-form {
@@ -347,7 +353,7 @@ form#blog-information {
 }
 
 img#image-preview {
-  width: 50%;
+  max-width: 60%;
 }
 
 #tags,
@@ -356,3 +362,103 @@ img#image-preview {
   align-items: center;
   gap: 4px;
 }
+
+/* Post Page */
+div.post-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow: hidden;
+  padding: 0 1rem;
+  width: 100%;
+  margin: auto;
+}
+
+div.post-content h1 {
+  padding-bottom: 0.5em;
+  border-bottom: solid 1px #94a3b8;
+}
+
+div.post-content :is(h1, h2) {
+  align-self: center;
+}
+
+div.post-content img {
+  display: block;
+  margin: auto;
+}
+
+li {
+  max-width: 100%;
+  white-space: nowrap;
+  margin: 0;
+  padding: 0;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  border: solid 1px #94a3b8;
+}
+
+th,
+td {
+  border: 1px solid #fff;
+  text-align: left;
+  padding: 8px;
+}
+
+th {
+  text-align: center;
+  background-color: #3f3f46;
+}
+
+tr:nth-child(even) {
+  background-color: #3f3f46;
+}
+
+tr:hover {
+  text-decoration: underline;
+}
+ul {
+  padding-left: 0;
+}
+
+ul li {
+  list-style-position: inside;
+}
+
+ol {
+  padding-left: 0;
+}
+
+ol li {
+  list-style-position: inside;
+}
+
+/* Nested lists */
+ul li ul li {
+  padding-left: 1em;
+}
+
+ol li ol li {
+  padding-left: 1em;
+}
+
+code {
+  padding: 0.2rem;
+  background-color: #272c34;
+}
+
+div.spacer {
+  border-bottom: solid 2px #94a3b8;
+  width: 80%;
+  margin: 1rem;
+}
+
+code.hljs {
+  display: block;
+  width: 60%;
+  margin: auto;
+}
+/* TODO: Blockquote formatting because theres no lib */

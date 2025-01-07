@@ -1,15 +1,25 @@
 {{define "post"}}
 <div class="menu-square big-square">
-  <h1>{{ .post.Title }}</h1>
-  <hr />
-  <p class="infoblock">
+  <div class="spacer"></div>
+  <div class="tags">
+    {{ range .post.Tags}}
+    <a class="tag" href="/posts?term={{ . }}">{{ . }}</a>
+    {{ end }}
+  </div>
+  <div class="infoblock">
     {{ $x := .post.CreatedAt | formatTimeToString }} {{ $y := .post.UpdatedAt |
     formatTimeToString }} Posted: {{ $x }} {{ if ne $x $y }}(Updated: {{ $y
     }}){{end}}
-  </p>
+  </div>
+  <div class="spacer"></div>
+  <div class="post-content">{{ .post.Summary | formatAsHTML }}</div>
+  <div class="spacer"></div>
   <div class="post-content">{{ .post.Content | formatAsHTML }}</div>
+  <script>
+    hljs.highlightAll();
+  </script>
+  <div class="spacer"></div>
   <div class="tags">
-    <span>Tags:</span>
     {{ range .post.Tags}}
     <a class="tag" href="/posts?term={{ . }}">{{ . }}</a>
     {{ end }}
