@@ -1,16 +1,19 @@
-FROM node:18-alpine AS typescript
+FROM node:18-alpine AS dependencies
+
+RUN npm install -g typescript
+
+FROM dependencies AS typescript
 
 WORKDIR /app
 
-COPY . .
-
-RUN npm install -g typescript
+COPY ./static/ts/ ./
+COPY tsconfig.json ./tsconfig.json
 
 WORKDIR /app
 
 RUN ["tsc"]
 
-FROM golang:latest AS base
+FROM golang:1.23-alpine AS base
 
 FROM base AS dev
 
@@ -18,20 +21,44 @@ ENTRYPOINT ["tail", "-f", "/dev/null"]
 
 FROM base AS prod
 
+RUN apk add --no-cache \
+    build-base \
+    gcc \
+    libc-dev \
+    musl-dev \
+    pkgconf \
+    zlib-dev \
+    openssl-dev
+
+ENV CGO_ENABLED=1
+ENV GOOS linux
+
 WORKDIR /app 
 
 COPY go.mod go.sum ./
 
 RUN go mod download 
 
-COPY . .
+COPY main.go main.go
+COPY crypt crypt
+COPY config config
+COPY model model
+COPY service service
+COPY repository repository
+COPY controller controller
+COPY static static
 
-RUN mkdir -p "/app/static/js"
+RUN GOOS=linux go build -o easyblog
 
-COPY --from=typescript /app/static/js /app/static/js
+FROM alpine:latest AS deploy
 
-RUN go build . 
+WORKDIR /app
+ENV GOPATH /app
+
+COPY --from=prod /app/easyblog /app/easyblog
+COPY --from=prod /app/static/ /app/static/
+COPY --from=typescript /app/static/js/ /app/static/js/
 
 EXPOSE 8080
 
-CMD ["/app/easyblog"]
+ENTRYPOINT ["./easyblog"]

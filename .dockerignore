@@ -5,3 +5,4 @@ utils/
 .mockery.yaml
 mock_*
 Makefile
+/static/js/*
