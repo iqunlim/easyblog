@@ -13,13 +13,7 @@ WORKDIR /app
 
 RUN ["tsc"]
 
-FROM golang:1.23-alpine AS base
-
-FROM base AS dev
-
-ENTRYPOINT ["tail", "-f", "/dev/null"]
-
-FROM base AS prod
+FROM golang:1.23-alpine AS builder 
 
 RUN apk add --no-cache \
     build-base \
@@ -46,17 +40,16 @@ COPY model model
 COPY service service
 COPY repository repository
 COPY controller controller
-COPY static static
 
-RUN GOOS=linux go build -o easyblog
+RUN go build -o easyblog
 
 FROM alpine:latest AS deploy
 
 WORKDIR /app
 ENV GOPATH /app
 
-COPY --from=prod /app/easyblog /app/easyblog
-COPY --from=prod /app/static/ /app/static/
+COPY --from=builder /app/easyblog /app/easyblog
+COPY static /app/static/
 COPY --from=typescript /app/static/js/ /app/static/js/
 
 EXPOSE 8080

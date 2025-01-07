@@ -11,31 +11,6 @@ import (
 	"github.com/iqunlim/easyblog/service"
 )
 
-/*
-login page
-a register page
-a logout page (maybe, it would have a CONFIRMED YOU HAVE LOGGED OUT)
-
-admin pages:
-view your posts (you can create, edit or delete with the api)
-create page (edit page will just include the stuff you yank for the db and fill straight in)
-
-main page that has all posts
-post page that just has the post info
-
-Endpoints:
-/login
-/register
-
-/home == / == view all posts
-/posts/{id} == view specific post
-
-/admin = dashboard homepage
-/admin/edit/{id} = edit specific article
-/admin/new = create specific article
-*/
-
-
 
 type WebHandler interface {
 	LoginWebHandler(*gin.Context)

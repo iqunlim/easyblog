@@ -33,7 +33,7 @@ func (a *AuthHandlerImpl) RegisterHandler(c *gin.Context) {
 	app := Gin{C: c}
 	var u model.User 
 	if err := c.ShouldBind(&u); err != nil {
-		app.Response(400, false, "Malformed Request", nil)
+		app.MalformedResponse()
 		return
 	}
 	err := a.userservice.Register(&u)
