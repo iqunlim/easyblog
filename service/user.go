@@ -3,6 +3,7 @@ package service
 import (
 	"bufio"
 	"errors"
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -67,6 +68,7 @@ func (ur *UserServiceImpl) Register(u *model.User) error {
 }
 
 func (ur *UserServiceImpl) FirstRun() {
+	// Extremely basic admin handling.
 	fmt.Println(" _____                _     _             ")
 	fmt.Println("| ____|__ _ ___ _   _| |__ | | ___   __ _ ")
 	fmt.Println("|  _| / _` / __| | | | '_ \\| |/ _ \\ / _` |")
@@ -78,26 +80,42 @@ func (ur *UserServiceImpl) FirstRun() {
 	if err == nil {
 		return
 	}
-	// Check user repository for database connection
-	// Create settings table
-	// Bufio reader that goes through some config options. Figure them out!
-	// Admin username
-	// Admin password
-	// Apply this to the users table with userservice.Register()
-	// JWT key?
-	reader := bufio.NewReader(os.Stdin)
-	fmt.Print("Admin Username: ")
-	name, _ := reader.ReadString('\n')
-	name = strings.Trim(name, "\n")
-	fmt.Print("Admin Password: ")
-	pwd, _ := reader.ReadString('\n')
-	pwd = strings.Trim(pwd, "\n")
-	fmt.Printf("Username: %s, Password: %s", name, pwd)
-	registerUser := &model.User{
-		Username: name,
-		Password: name,
+
+
+	var userToBe *model.User
+	name := flag.String("username", "", "Intitial Admin Username")
+	pwd := flag.String("pwd", "", "Initial Admin Password")
+	flag.Parse()
+	if *name == "" || *pwd == "" {
+		fmt.Println("No or wrong flags detected. Entering manual entry mode")
+		reader := bufio.NewReader(os.Stdin)
+		fmt.Print("Admin Username: ")
+		newName, err := reader.ReadString('\n')
+		if err != nil {
+			panic(err)
+		}
+		newName = strings.Trim(newName, " \t\r\n")
+		fmt.Print("Admin Password: ")
+		newPwd, err := reader.ReadString('\n')
+		if err != nil {
+			panic(err)
+		}
+		newPwd = strings.Trim(newPwd, " \t\r\n")
+		userToBe = &model.User{
+			Username: newName,
+			Password: newPwd,
+		}
+	} else {
+		userToBe = &model.User{
+			Username: *name,
+			Password: *pwd,
+		}
 	}
-	if err := ur.Register(registerUser); err != nil {
+	if userToBe.Username == "" || userToBe.Password == "" {
+		panic("Username and password must be input")
+
+	}
+	if err := ur.Register(userToBe); err != nil {
 		log.Fatalf("Error occured in registration: %v", err)
 	}
 	if err := ur.repository.PutUserConfig(&model.UserConfig{ FirstRunCompleted: true }); err != nil {
