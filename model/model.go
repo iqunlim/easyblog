@@ -55,6 +55,7 @@ func (t Tags) Value() (driver.Value, error) {
 // ID, CreatedAt and UpdatedAt are all handled by GORM
 type BlogPost struct {
 	gorm.Model
+	ID string `gorm:"primaryKey; type:VARCHAR(255);unique; not null"`
 	Title string `gorm:"type:VARCHAR(255);not null" json:"title" form:"title"`
 	Author string `gorm:"type:VARCHAR(255);" json:"author" form:"author"`
 	ImageUrl string `gorm:"type:VARCHAR(255);not null" json:"imageUrl" form:"imageUrl"`

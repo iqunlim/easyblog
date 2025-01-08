@@ -61,7 +61,7 @@ func TestWebHandlerImpl_AdminEditPostHandler(t *testing.T) {
 	router.GET("/admin/edit/:id", web.AdminEditPostHandler)
 
 	// Test expected with id
-	sv.EXPECT().GetByID(mock.Anything, 1, false).Return(FakeBlogPost, nil)
+	sv.EXPECT().GetByID(mock.Anything, "1", false).Return(FakeBlogPost, nil)
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/admin/edit/1", nil)
 	router.ServeHTTP(w, req)
@@ -86,7 +86,7 @@ func TestWebHandlerImpl_AdminEditPostHandler(t *testing.T) {
 	bodyHasFragments(t, w.Body.String(), fragments)
 
 	// Test unexpeted error from service
-	sv.EXPECT().GetByID(mock.Anything, 999, false).Return(nil, errors.New("UnexpectedError"))
+	sv.EXPECT().GetByID(mock.Anything, "999", false).Return(nil, errors.New("UnexpectedError"))
 	w = httptest.NewRecorder()
 	req, _ = http.NewRequest("GET", "/admin/edit/999", nil)
 	router.ServeHTTP(w, req)
@@ -100,7 +100,7 @@ func TestWebHandlerImpl_AdminEditPostHandler(t *testing.T) {
 	bodyHasFragments(t, w.Body.String(), fragments)
 
 	// Test 404 Not Found
-	sv.EXPECT().GetByID(mock.Anything, 404, false).Return(nil, &repository.NotFoundError{})
+	sv.EXPECT().GetByID(mock.Anything, "404", false).Return(nil, &repository.NotFoundError{})
 
 	w = httptest.NewRecorder()
 	req, _ = http.NewRequest("GET", "/admin/edit/404", nil)
@@ -116,6 +116,7 @@ func TestWebHandlerImpl_AdminEditPostHandler(t *testing.T) {
 	
 	// Test malformed ID
 
+	/* Obsoleted by moving away from numerical IDs
 	w = httptest.NewRecorder()
 	req, _ = http.NewRequest("GET", "/admin/edit/asdf", nil)
 
@@ -127,11 +128,12 @@ func TestWebHandlerImpl_AdminEditPostHandler(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, w.Code)
 	bodyHasFragments(t, w.Body.String(), fragments)
+	*/
 
-	// Test ID = 0
+	// Test ID = 0 (new Post)
 
 	w = httptest.NewRecorder()
-	req, _ = http.NewRequest("GET", "/admin/edit/0", nil)
+	req, _ = http.NewRequest("GET", "/admin/edit", nil)
 
 	router.ServeHTTP(w, req)
 
@@ -150,10 +152,10 @@ func TestWebHandlerImpl_AdminDashboardHandler(t *testing.T) {
 
 	// Test Expected
 	ret := FakeBlogPost
-	ret.ID = 1
+	ret.ID = "1"
 
 	ret2 := FakeBlogPost2
-	ret2.ID = 2
+	ret2.ID = "2"
 	sv.EXPECT().GetAllNoContent(mock.Anything).Return([]*model.BlogPost{ret, ret2}, nil)
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/admin", nil)
@@ -209,7 +211,7 @@ func TestWebHandlerImpl_PostsByIDWebHandler(t *testing.T) {
 	router.GET("/posts/:id", web.PostsByIDWebHandler)
 
 	// Test Expected
-	sv.EXPECT().GetByID(mock.Anything, 1, true).Return(FakeBlogPost, nil)
+	sv.EXPECT().GetByID(mock.Anything, "1", true).Return(FakeBlogPost, nil)
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/posts/1", nil)
 	router.ServeHTTP(w, req)
@@ -222,6 +224,7 @@ func TestWebHandlerImpl_PostsByIDWebHandler(t *testing.T) {
 	bodyHasFragments(t, w.Body.String(), fragments)
 
 	// Test Bad ID
+	/* Obsoleted by moving away from numerical post IDs
 	w = httptest.NewRecorder()
 	req, _ = http.NewRequest("GET", "/posts/asf", nil)
 	router.ServeHTTP(w, req)
@@ -235,7 +238,7 @@ func TestWebHandlerImpl_PostsByIDWebHandler(t *testing.T) {
 
 	// Test 0 ID
 	w = httptest.NewRecorder()
-	req, _ = http.NewRequest("GET", "/posts/0", nil)
+	req, _ = http.NewRequest("GET", "/posts", nil)
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusBadRequest, w.Code)
@@ -244,8 +247,9 @@ func TestWebHandlerImpl_PostsByIDWebHandler(t *testing.T) {
 	}
 
 	bodyHasFragments(t, w.Body.String(), fragments)
+	*/
 	// Test Not Found
-	sv.EXPECT().GetByID(mock.Anything, 999, true).Return(nil, &repository.NotFoundError{})
+	sv.EXPECT().GetByID(mock.Anything, "999", true).Return(nil, &repository.NotFoundError{})
 
 	w = httptest.NewRecorder()
 	req, _ = http.NewRequest("GET", "/posts/999", nil)
@@ -260,7 +264,7 @@ func TestWebHandlerImpl_PostsByIDWebHandler(t *testing.T) {
 	bodyHasFragments(t, w.Body.String(), fragments)
 
 	// Test Unexpected Error
-	sv.EXPECT().GetByID(mock.Anything, 888, true).Return(nil, errors.New("Boom"))
+	sv.EXPECT().GetByID(mock.Anything, "888", true).Return(nil, errors.New("Boom"))
 	w = httptest.NewRecorder()
 	req, _ = http.NewRequest("GET", "/posts/888", nil)
 	router.ServeHTTP(w, req)

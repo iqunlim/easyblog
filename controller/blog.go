@@ -33,7 +33,7 @@ func NewBlogHandler(blogservice service.BlogService, imageservice service.ImageH
 
 // Struct for handling the URI
 type blogid struct {
-	ID int `json:"id" uri:"id" binding:"required"`
+	ID string `json:"id" uri:"id" binding:"required"`
 } 
 
 
@@ -99,7 +99,7 @@ func (b *BlogHandlerImpl) handleBlogPostUpdate(c *gin.Context) {
 	if err := b.blogservice.Update(c, id.ID, &blog); err != nil {
 		var be *repository.NotFoundError
 		if errors.As(err, &be) {
-			app.Response(404, false, fmt.Sprintf("Post %d not Found", id.ID), nil)
+			app.Response(404, false, fmt.Sprintf("Post %s not Found", id.ID), nil)
 			return
 		} else {
 			app.InternalServerErrorResponse()
@@ -120,14 +120,14 @@ func (b *BlogHandlerImpl) handleBlogPostDelete(c *gin.Context) {
 	if err := b.blogservice.Delete(c, id.ID); err != nil {
 		var be *repository.NotFoundError
 		if errors.As(err, &be) {
-			app.Response(404, false, fmt.Sprintf("Post %d not Found", id.ID), nil)
+			app.Response(404, false, fmt.Sprintf("Post %s not Found", id.ID), nil)
 			return
 		} else {
 			app.InternalServerErrorResponse()
 			return
 		}
 	}
-	app.Response(200, true, fmt.Sprintf("Deleted post %d successfully", id.ID), nil)
+	app.Response(200, true, fmt.Sprintf("Deleted post %s successfully", id.ID), nil)
 }
 
 

@@ -56,7 +56,7 @@ func TestBlogHandlerImpl_handleBlogPostGet(t *testing.T) {
 
 	// Test expected request
 	// if you can figure out mock.AnythingOfType(context.Context) do call me
-	sv.EXPECT().GetByID(mock.Anything, 1, true).Return(FakeBlogPost, nil)
+	sv.EXPECT().GetByID(mock.Anything, "1", true).Return(FakeBlogPost, nil)
 	req, _ := http.NewRequest("GET", "/api/v1/posts/1", nil)
 	router.ServeHTTP(w, req)
 
@@ -66,16 +66,19 @@ func TestBlogHandlerImpl_handleBlogPostGet(t *testing.T) {
 	assert.Equal(t, FakeBlogPost.Title, retJSON.MessageBody.Title)
 	assert.Equal(t, FakeBlogPost.Content, retJSON.MessageBody.Content)
 	assert.Equal(t, FakeBlogPost.Tags, retJSON.MessageBody.Tags)
-
 	// Test Bad Request (0 should count as a bad request)
-	req, _ = http.NewRequest("GET", "/api/v1/posts/0", nil)
+	//Obsoleted by moving away from numerical IDs
+	/*
+	req, _ := http.NewRequest("GET", "/api/v1/posts/0", nil)
 	w = httptest.NewRecorder()
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusBadRequest, w.Code)
+	*/
 
+	
 	// Test unexpected error
-	sv.EXPECT().GetByID(mock.Anything, 2, true).Return(nil, errors.New("UnexpectedError"))
+	sv.EXPECT().GetByID(mock.Anything, "2", true).Return(nil, errors.New("UnexpectedError"))
 	req, _ = http.NewRequest("GET", "/api/v1/posts/2", nil)
 	w = httptest.NewRecorder()
 	router.ServeHTTP(w, req)
@@ -83,13 +86,14 @@ func TestBlogHandlerImpl_handleBlogPostGet(t *testing.T) {
 	assert.Equal(t, http.StatusInternalServerError, w.Code)
 
 	// Test NotFoundError
-	sv.EXPECT().GetByID(mock.Anything, 999, true).Return(nil, &repository.NotFoundError{
-		PostID: 999,
+	sv.EXPECT().GetByID(mock.Anything, "999", true).Return(nil, &repository.NotFoundError{
+		PostID: "999",
 	})
 	req, _ = http.NewRequest("GET", "/api/v1/posts/999", nil)
 	w = httptest.NewRecorder()
 	router.ServeHTTP(w, req)
 	assert.Equal(t, http.StatusNotFound, w.Code)
+	
 }
 
 func TestBlogHandlerImpl_handleBlogPostPost(t *testing.T) {
@@ -215,15 +219,16 @@ func TestBlogHandlerImpl_handleBlogPostDelete(t *testing.T) {
 	assert.Equal(t, http.StatusNotFound, w.Code)
 
 	// Test malformed ID
+	/* Obsoleted by moving away from numerical IDs
 	w = httptest.NewRecorder()
 	req, _ = http.NewRequest("DELETE", "/api/v1/posts/asdf", nil)
 	router.ServeHTTP(w, req)
 	assert.Equal(t, http.StatusBadRequest, w.Code)
-
+	*/
 
 	// Test Expected
 	w = httptest.NewRecorder()
-	sv.EXPECT().Delete(mock.Anything, 1).Return(nil)
+	sv.EXPECT().Delete(mock.Anything, "1").Return(nil)
 	req, _ = http.NewRequest("DELETE", "/api/v1/posts/1", nil)
 	router.ServeHTTP(w, req)
 
@@ -231,7 +236,7 @@ func TestBlogHandlerImpl_handleBlogPostDelete(t *testing.T) {
 
 	// Test not found
 	w = httptest.NewRecorder()
-	sv.EXPECT().Delete(mock.Anything, 999).Return(&repository.NotFoundError{PostID: 999})
+	sv.EXPECT().Delete(mock.Anything, "999").Return(&repository.NotFoundError{PostID: "999"})
 
 	req, _ = http.NewRequest("DELETE", "/api/v1/posts/999", nil)
 	router.ServeHTTP(w, req)
@@ -240,7 +245,7 @@ func TestBlogHandlerImpl_handleBlogPostDelete(t *testing.T) {
 
 	// Test internal server error
 	w = httptest.NewRecorder()
-	sv.EXPECT().Delete(mock.Anything, 888).Return(errors.New("Boom"))
+	sv.EXPECT().Delete(mock.Anything, "888").Return(errors.New("Boom"))
 	req, _ = http.NewRequest("DELETE", "/api/v1/posts/888", nil)
 	router.ServeHTTP(w, req)
 
@@ -261,7 +266,7 @@ func TestBlogHandlerImpl_handleBlogPostUpdate(t *testing.T) {
 	router.PUT("/api/v1/posts/:id", b.handleBlogPostUpdate)
 
 	// Test Expected
-	sv.EXPECT().Update(mock.Anything, 1, FakeBlogPost).Return(nil)
+	sv.EXPECT().Update(mock.Anything, "1", FakeBlogPost).Return(nil)
 	reqJSON, _ := json.Marshal(FakeBlogPost)
 	req, _ := http.NewRequest("PUT", "/api/v1/posts/1", strings.NewReader(string(reqJSON)))
 	req.Header = http.Header{
@@ -271,6 +276,7 @@ func TestBlogHandlerImpl_handleBlogPostUpdate(t *testing.T) {
 	assert.Equal(t, http.StatusOK, w.Code)
 
 	// Test malformed ID
+	/* Obsoleted by moving away from numerical IDs
 	w = httptest.NewRecorder()
 	req, _ = http.NewRequest("PUT", "/api/v1/posts/asdf", nil)
 	req.Header = http.Header{
@@ -278,7 +284,7 @@ func TestBlogHandlerImpl_handleBlogPostUpdate(t *testing.T) {
 	}
 	router.ServeHTTP(w, req)
 	assert.Equal(t, http.StatusBadRequest, w.Code)
-
+	*/
 	// Test no ID given
 	w = httptest.NewRecorder()
 	req, _ = http.NewRequest("PUT", "/api/v1/posts", nil)
@@ -309,7 +315,7 @@ func TestBlogHandlerImpl_handleBlogPostUpdate(t *testing.T) {
 
 	// Test NotFoundError
 	reqJSON2, _ := json.Marshal(FakeBlogPost2)
-	sv.EXPECT().Update(mock.Anything, 2, FakeBlogPost2).Return(&repository.NotFoundError{})
+	sv.EXPECT().Update(mock.Anything, "2", FakeBlogPost2).Return(&repository.NotFoundError{})
 	w = httptest.NewRecorder()
 	req, _ = http.NewRequest("PUT", "/api/v1/posts/2", strings.NewReader(string(reqJSON2)))
 	req.Header = http.Header{
@@ -319,7 +325,7 @@ func TestBlogHandlerImpl_handleBlogPostUpdate(t *testing.T) {
 
 	assert.Equal(t, http.StatusNotFound, w.Code)
 	// Test Internal Server Error
-	sv.EXPECT().Update(mock.Anything, 500, FakeBlogPost2).Return(errors.New("UnexpectedError"))
+	sv.EXPECT().Update(mock.Anything, "500", FakeBlogPost2).Return(errors.New("UnexpectedError"))
 	w = httptest.NewRecorder()
 	req, _ = http.NewRequest("PUT", "/api/v1/posts/500", strings.NewReader(string(reqJSON2)))
 	req.Header = http.Header{

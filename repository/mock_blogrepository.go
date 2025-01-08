@@ -23,7 +23,7 @@ func (_m *MockBlogRepository) EXPECT() *MockBlogRepository_Expecter {
 }
 
 // Delete provides a mock function with given fields: ctx, id
-func (_m *MockBlogRepository) Delete(ctx context.Context, id int) error {
+func (_m *MockBlogRepository) Delete(ctx context.Context, id string) error {
 	ret := _m.Called(ctx, id)
 
 	if len(ret) == 0 {
@@ -31,7 +31,7 @@ func (_m *MockBlogRepository) Delete(ctx context.Context, id int) error {
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, int) error); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, string) error); ok {
 		r0 = rf(ctx, id)
 	} else {
 		r0 = ret.Error(0)
@@ -47,14 +47,14 @@ type MockBlogRepository_Delete_Call struct {
 
 // Delete is a helper method to define mock.On call
 //   - ctx context.Context
-//   - id int
+//   - id string
 func (_e *MockBlogRepository_Expecter) Delete(ctx interface{}, id interface{}) *MockBlogRepository_Delete_Call {
 	return &MockBlogRepository_Delete_Call{Call: _e.mock.On("Delete", ctx, id)}
 }
 
-func (_c *MockBlogRepository_Delete_Call) Run(run func(ctx context.Context, id int)) *MockBlogRepository_Delete_Call {
+func (_c *MockBlogRepository_Delete_Call) Run(run func(ctx context.Context, id string)) *MockBlogRepository_Delete_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(int))
+		run(args[0].(context.Context), args[1].(string))
 	})
 	return _c
 }
@@ -64,7 +64,7 @@ func (_c *MockBlogRepository_Delete_Call) Return(_a0 error) *MockBlogRepository_
 	return _c
 }
 
-func (_c *MockBlogRepository_Delete_Call) RunAndReturn(run func(context.Context, int) error) *MockBlogRepository_Delete_Call {
+func (_c *MockBlogRepository_Delete_Call) RunAndReturn(run func(context.Context, string) error) *MockBlogRepository_Delete_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -189,7 +189,7 @@ func (_c *MockBlogRepository_GetByFilter_Call) RunAndReturn(run func(context.Con
 }
 
 // GetByID provides a mock function with given fields: ctx, id, fields
-func (_m *MockBlogRepository) GetByID(ctx context.Context, id int, fields []string) (*model.BlogPost, error) {
+func (_m *MockBlogRepository) GetByID(ctx context.Context, id string, fields []string) (*model.BlogPost, error) {
 	ret := _m.Called(ctx, id, fields)
 
 	if len(ret) == 0 {
@@ -198,10 +198,10 @@ func (_m *MockBlogRepository) GetByID(ctx context.Context, id int, fields []stri
 
 	var r0 *model.BlogPost
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, int, []string) (*model.BlogPost, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, string, []string) (*model.BlogPost, error)); ok {
 		return rf(ctx, id, fields)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, int, []string) *model.BlogPost); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, string, []string) *model.BlogPost); ok {
 		r0 = rf(ctx, id, fields)
 	} else {
 		if ret.Get(0) != nil {
@@ -209,7 +209,7 @@ func (_m *MockBlogRepository) GetByID(ctx context.Context, id int, fields []stri
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, int, []string) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, string, []string) error); ok {
 		r1 = rf(ctx, id, fields)
 	} else {
 		r1 = ret.Error(1)
@@ -225,15 +225,15 @@ type MockBlogRepository_GetByID_Call struct {
 
 // GetByID is a helper method to define mock.On call
 //   - ctx context.Context
-//   - id int
+//   - id string
 //   - fields []string
 func (_e *MockBlogRepository_Expecter) GetByID(ctx interface{}, id interface{}, fields interface{}) *MockBlogRepository_GetByID_Call {
 	return &MockBlogRepository_GetByID_Call{Call: _e.mock.On("GetByID", ctx, id, fields)}
 }
 
-func (_c *MockBlogRepository_GetByID_Call) Run(run func(ctx context.Context, id int, fields []string)) *MockBlogRepository_GetByID_Call {
+func (_c *MockBlogRepository_GetByID_Call) Run(run func(ctx context.Context, id string, fields []string)) *MockBlogRepository_GetByID_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(int), args[2].([]string))
+		run(args[0].(context.Context), args[1].(string), args[2].([]string))
 	})
 	return _c
 }
@@ -243,7 +243,7 @@ func (_c *MockBlogRepository_GetByID_Call) Return(_a0 *model.BlogPost, _a1 error
 	return _c
 }
 
-func (_c *MockBlogRepository_GetByID_Call) RunAndReturn(run func(context.Context, int, []string) (*model.BlogPost, error)) *MockBlogRepository_GetByID_Call {
+func (_c *MockBlogRepository_GetByID_Call) RunAndReturn(run func(context.Context, string, []string) (*model.BlogPost, error)) *MockBlogRepository_GetByID_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -296,7 +296,7 @@ func (_c *MockBlogRepository_Post_Call) RunAndReturn(run func(context.Context, *
 }
 
 // Update provides a mock function with given fields: ctx, id, updateFn
-func (_m *MockBlogRepository) Update(ctx context.Context, id int, updateFn func(*model.BlogPost) (bool, error)) error {
+func (_m *MockBlogRepository) Update(ctx context.Context, id string, updateFn func(*model.BlogPost) (bool, error)) error {
 	ret := _m.Called(ctx, id, updateFn)
 
 	if len(ret) == 0 {
@@ -304,7 +304,7 @@ func (_m *MockBlogRepository) Update(ctx context.Context, id int, updateFn func(
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, int, func(*model.BlogPost) (bool, error)) error); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, string, func(*model.BlogPost) (bool, error)) error); ok {
 		r0 = rf(ctx, id, updateFn)
 	} else {
 		r0 = ret.Error(0)
@@ -320,15 +320,15 @@ type MockBlogRepository_Update_Call struct {
 
 // Update is a helper method to define mock.On call
 //   - ctx context.Context
-//   - id int
+//   - id string
 //   - updateFn func(*model.BlogPost)(bool , error)
 func (_e *MockBlogRepository_Expecter) Update(ctx interface{}, id interface{}, updateFn interface{}) *MockBlogRepository_Update_Call {
 	return &MockBlogRepository_Update_Call{Call: _e.mock.On("Update", ctx, id, updateFn)}
 }
 
-func (_c *MockBlogRepository_Update_Call) Run(run func(ctx context.Context, id int, updateFn func(*model.BlogPost) (bool, error))) *MockBlogRepository_Update_Call {
+func (_c *MockBlogRepository_Update_Call) Run(run func(ctx context.Context, id string, updateFn func(*model.BlogPost) (bool, error))) *MockBlogRepository_Update_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(int), args[2].(func(*model.BlogPost) (bool, error)))
+		run(args[0].(context.Context), args[1].(string), args[2].(func(*model.BlogPost) (bool, error)))
 	})
 	return _c
 }
@@ -338,7 +338,7 @@ func (_c *MockBlogRepository_Update_Call) Return(_a0 error) *MockBlogRepository_
 	return _c
 }
 
-func (_c *MockBlogRepository_Update_Call) RunAndReturn(run func(context.Context, int, func(*model.BlogPost) (bool, error)) error) *MockBlogRepository_Update_Call {
+func (_c *MockBlogRepository_Update_Call) RunAndReturn(run func(context.Context, string, func(*model.BlogPost) (bool, error)) error) *MockBlogRepository_Update_Call {
 	_c.Call.Return(run)
 	return _c
 }

@@ -2,13 +2,17 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"log"
+	"strconv"
+	"strings"
 
 	"github.com/gomarkdown/markdown"
 	"github.com/gomarkdown/markdown/html"
 	"github.com/gomarkdown/markdown/parser"
 	"github.com/iqunlim/easyblog/model"
 	"github.com/iqunlim/easyblog/repository"
+	"golang.org/x/exp/rand"
 )
 
 var (
@@ -29,9 +33,9 @@ var (
 
 type BlogService interface {
 	Post(ctx context.Context, blog *model.BlogPost) (*model.BlogPost, error)
-	Update(ctx context.Context, id int, blog *model.BlogPost) error
-	Delete(ctx context.Context, id int) error
-	GetByID(ctx context.Context, id int, htmlformat bool) (*model.BlogPost, error)
+	Update(ctx context.Context, id string, blog *model.BlogPost) error
+	Delete(ctx context.Context, id string) error
+	GetByID(ctx context.Context, id string, htmlformat bool) (*model.BlogPost, error)
 	GetAll(ctx context.Context, params string, htmlformat bool) ([]*model.BlogPost, error)
 	GetAllNoContent(ctx context.Context) ([]*model.BlogPost, error)
 }
@@ -50,12 +54,32 @@ func (b *BlogStandard) Post(ctx context.Context, blog *model.BlogPost) (*model.B
 	// Do sanitizing of inputs here
 	// Do logging here
 	// Do verification here
+	// Format articleslug
+	split := strings.Split(blog.Title, " ")
+	if len(split) > 8 {
+		split = split[:8]
+	}
+	articleSlug := strings.Join(split, "-")
+
+	iterationCounter := 0
+	for {
+		iterationCounter += 1
+		check, err := b.repository.GetByID(ctx, articleSlug, []string{"id"})
+		if err == nil && check.ID == articleSlug {        
+				randomNum := rand.Intn(1000) // Generate a random number between 0 and 99
+				articleSlug = articleSlug + "-" + strconv.Itoa(randomNum)
+		} else if iterationCounter > 10 {
+			return nil, fmt.Errorf("Somehow, you managed to hit the max iteration count on slug generation.")
+		} else {
+			break;
+		}
+	}
+	blog.ID = articleSlug
 
 	return blog, b.repository.Post(ctx, blog)
 }
 
-
-func (b *BlogStandard) Update(ctx context.Context, id int, blog *model.BlogPost) error {
+func (b *BlogStandard) Update(ctx context.Context, id string, blog *model.BlogPost) error {
 
 	updateFn := func(updatingPost *model.BlogPost) (bool, error) {
 
@@ -87,11 +111,11 @@ func (b *BlogStandard) Update(ctx context.Context, id int, blog *model.BlogPost)
 	return b.repository.Update(ctx, id, updateFn)
 }
 
-func (b *BlogStandard) Delete(ctx context.Context, id int) error {
+func (b *BlogStandard) Delete(ctx context.Context, id string) error {
 	return b.repository.Delete(ctx, id)
 }
 
-func (b *BlogStandard) GetByID(ctx context.Context, id int, htmlformat bool) (*model.BlogPost, error) {
+func (b *BlogStandard) GetByID(ctx context.Context, id string, htmlformat bool) (*model.BlogPost, error) {
 	res, err := b.repository.GetByID(ctx, id, AllBlogFields)
 	if err != nil {
 		return nil, err

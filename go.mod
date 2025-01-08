@@ -12,6 +12,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/stretchr/testify v1.9.0
 	golang.org/x/crypto v0.28.0
+	golang.org/x/exp v0.0.0-20250106191152-7588d65b2ba8
 	gorm.io/driver/sqlite v1.5.6
 	gorm.io/gorm v1.25.12
 )

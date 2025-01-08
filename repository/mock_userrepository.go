@@ -124,6 +124,109 @@ func (_c *MockUserRepository_GetByUsername_Call) RunAndReturn(run func(string) (
 	return _c
 }
 
+// GetUserConfig provides a mock function with no fields
+func (_m *MockUserRepository) GetUserConfig() (*model.UserConfig, error) {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetUserConfig")
+	}
+
+	var r0 *model.UserConfig
+	var r1 error
+	if rf, ok := ret.Get(0).(func() (*model.UserConfig, error)); ok {
+		return rf()
+	}
+	if rf, ok := ret.Get(0).(func() *model.UserConfig); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*model.UserConfig)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func() error); ok {
+		r1 = rf()
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockUserRepository_GetUserConfig_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetUserConfig'
+type MockUserRepository_GetUserConfig_Call struct {
+	*mock.Call
+}
+
+// GetUserConfig is a helper method to define mock.On call
+func (_e *MockUserRepository_Expecter) GetUserConfig() *MockUserRepository_GetUserConfig_Call {
+	return &MockUserRepository_GetUserConfig_Call{Call: _e.mock.On("GetUserConfig")}
+}
+
+func (_c *MockUserRepository_GetUserConfig_Call) Run(run func()) *MockUserRepository_GetUserConfig_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *MockUserRepository_GetUserConfig_Call) Return(_a0 *model.UserConfig, _a1 error) *MockUserRepository_GetUserConfig_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockUserRepository_GetUserConfig_Call) RunAndReturn(run func() (*model.UserConfig, error)) *MockUserRepository_GetUserConfig_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// PutUserConfig provides a mock function with given fields: userConfig
+func (_m *MockUserRepository) PutUserConfig(userConfig *model.UserConfig) error {
+	ret := _m.Called(userConfig)
+
+	if len(ret) == 0 {
+		panic("no return value specified for PutUserConfig")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(*model.UserConfig) error); ok {
+		r0 = rf(userConfig)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// MockUserRepository_PutUserConfig_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'PutUserConfig'
+type MockUserRepository_PutUserConfig_Call struct {
+	*mock.Call
+}
+
+// PutUserConfig is a helper method to define mock.On call
+//   - userConfig *model.UserConfig
+func (_e *MockUserRepository_Expecter) PutUserConfig(userConfig interface{}) *MockUserRepository_PutUserConfig_Call {
+	return &MockUserRepository_PutUserConfig_Call{Call: _e.mock.On("PutUserConfig", userConfig)}
+}
+
+func (_c *MockUserRepository_PutUserConfig_Call) Run(run func(userConfig *model.UserConfig)) *MockUserRepository_PutUserConfig_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(*model.UserConfig))
+	})
+	return _c
+}
+
+func (_c *MockUserRepository_PutUserConfig_Call) Return(_a0 error) *MockUserRepository_PutUserConfig_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *MockUserRepository_PutUserConfig_Call) RunAndReturn(run func(*model.UserConfig) error) *MockUserRepository_PutUserConfig_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // NewMockUserRepository creates a new instance of MockUserRepository. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockUserRepository(t interface {

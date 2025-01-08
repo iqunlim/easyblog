@@ -12,9 +12,9 @@ import (
 
 type BlogRepository interface {
 	Post(ctx context.Context, blog *model.BlogPost) error
-	Update(ctx context.Context,id int, updateFn func(*model.BlogPost) (bool, error)) error
-	Delete(ctx context.Context, id int) error
-	GetByID(ctx context.Context, id int, fields []string) (*model.BlogPost, error)
+	Update(ctx context.Context,id string, updateFn func(*model.BlogPost) (bool, error)) error
+	Delete(ctx context.Context, id string) error
+	GetByID(ctx context.Context, id string, fields []string) (*model.BlogPost, error)
 	GetByFilter(ctx context.Context, queryparam string, fields []string) ([]*model.BlogPost, error)
 	GetAll(ctx context.Context, fields []string) ([]*model.BlogPost, error)
 }
@@ -35,11 +35,11 @@ func (b *BlogRepositoryImpl) Post(ctx context.Context, blog *model.BlogPost) err
 	return b.DB.Create(blog).Error
 
 }
-func (b *BlogRepositoryImpl) Update(ctx context.Context,id int, updateFn func(updatingPost *model.BlogPost) (bool, error)) error { 
+func (b *BlogRepositoryImpl) Update(ctx context.Context,id string, updateFn func(updatingPost *model.BlogPost) (bool, error)) error { 
 
 
 	var post model.BlogPost
-	if err := b.DB.First(&post, id).Error; err != nil {
+	if err := b.DB.Where("id = ?", id).First(&post).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &NotFoundError{
 				PostID: id,
@@ -62,10 +62,10 @@ func (b *BlogRepositoryImpl) Update(ctx context.Context,id int, updateFn func(up
 
 	return nil
 }
-func (b *BlogRepositoryImpl) Delete(ctx context.Context,id int) error { 
+func (b *BlogRepositoryImpl) Delete(ctx context.Context,id string) error { 
 	
 
-	res := b.DB.Delete(&model.BlogPost{}, id)
+	res := b.DB.Where("id = ?", id).Delete(&model.BlogPost{})
 	err := res.Error
 
 	if err != nil {
@@ -79,10 +79,10 @@ func (b *BlogRepositoryImpl) Delete(ctx context.Context,id int) error {
 	return nil
 }
 
-func (b *BlogRepositoryImpl) GetByID(ctx context.Context,id int, fields []string) (*model.BlogPost, error) { 
+func (b *BlogRepositoryImpl) GetByID(ctx context.Context,id string, fields []string) (*model.BlogPost, error) { 
 
 	var post *model.BlogPost
-	if err := b.DB.First(&post, id).Select(fields).Error; err != nil {
+	if err := b.DB.Where("id = ?", id).First(&post).Select(fields).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, &NotFoundError{
 				PostID: id,
@@ -124,9 +124,9 @@ func (b *BlogRepositoryImpl) GetAll(ctx context.Context, fields []string) ([]*mo
 }
 
 type NotFoundError struct {
-	PostID int
+	PostID string
 }
 
 func (e NotFoundError) Error() string {
-	return fmt.Sprintf("Post ID: %d Not Found", e.PostID)
+	return fmt.Sprintf("Post ID: %s Not Found", e.PostID)
 }

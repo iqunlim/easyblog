@@ -11,6 +11,9 @@
     formatTimeToString }} Posted: {{ $x }} {{ if ne $x $y }}(Updated: {{ $y
     }}){{end}}
   </div>
+  <img
+    src="{{ if .post.ImageUrl }}{{ .post.ImageUrl}}{{ else}}/static/favicon.ico{{end}}"
+  />
   <div class="spacer"></div>
   <div class="post-content">{{ .post.Summary | formatAsHTML }}</div>
   <div class="spacer"></div>

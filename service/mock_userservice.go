@@ -20,6 +20,38 @@ func (_m *MockUserService) EXPECT() *MockUserService_Expecter {
 	return &MockUserService_Expecter{mock: &_m.Mock}
 }
 
+// FirstRun provides a mock function with no fields
+func (_m *MockUserService) FirstRun() {
+	_m.Called()
+}
+
+// MockUserService_FirstRun_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'FirstRun'
+type MockUserService_FirstRun_Call struct {
+	*mock.Call
+}
+
+// FirstRun is a helper method to define mock.On call
+func (_e *MockUserService_Expecter) FirstRun() *MockUserService_FirstRun_Call {
+	return &MockUserService_FirstRun_Call{Call: _e.mock.On("FirstRun")}
+}
+
+func (_c *MockUserService_FirstRun_Call) Run(run func()) *MockUserService_FirstRun_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *MockUserService_FirstRun_Call) Return() *MockUserService_FirstRun_Call {
+	_c.Call.Return()
+	return _c
+}
+
+func (_c *MockUserService_FirstRun_Call) RunAndReturn(run func()) *MockUserService_FirstRun_Call {
+	_c.Run(run)
+	return _c
+}
+
 // Register provides a mock function with given fields: u
 func (_m *MockUserService) Register(u *model.User) error {
 	ret := _m.Called(u)

@@ -15,7 +15,7 @@ interface APIResponse {
 }
 
 interface APIImageResponse extends APIResponse {
-  data: { filepath: string };
+  data?: { filepath: string };
 }
 
 const DEFAULT_IMAGE = "/static/favicon.ico";
@@ -28,7 +28,7 @@ function initialize(tags: string, postID: string) {
   const tagsArray = tags.split("%").filter((tag) => tag !== "");
   const editor = new Editor(tagsArray, postID);
   // Setting up form actions for the editor class
-  const form = <HTMLFormElement>document.getElementById("blog-information");
+  const form = document.getElementById("blog-information") as HTMLFormElement;
   if (form === null) {
     throw new Error("The Form Was never found");
   }
@@ -39,17 +39,17 @@ function initialize(tags: string, postID: string) {
 }
 
 class Editor {
-  postID: number;
+  postID: string;
   tagsDiv: TagsDiv;
   form: HTMLFormElement;
   currentImageUrl: string; /* Has the image changed... */
   imageBtn: HTMLInputElement;
   imagePreview: HTMLImageElement;
   constructor(tags: string[], postID: string) {
-    this.postID = Number(postID);
+    this.postID = postID;
     this.tagsDiv = new TagsDiv(tags);
-    this.form = <HTMLFormElement>document.getElementById("blog-information");
-    this.imageBtn = <HTMLInputElement>document.getElementById("blog-img")!;
+    this.form = document.getElementById("blog-information") as HTMLFormElement;
+    this.imageBtn = document.getElementById("blog-img") as HTMLInputElement;
     this.imagePreview = <HTMLImageElement>(
       document.getElementById("image-preview")
     );
@@ -88,9 +88,15 @@ class Editor {
       // If we did then do so
     } else {
       this.BlogPostImagePost(formData)
-        .then((response) =>
-          this.BlogPostDataPost(formData, response.data.filepath)
-        )
+        .then((response) => {
+          if (!response.data?.filepath) {
+            throw new Error(
+              `Image failed to upload, response code was,
+              ${response.code}`
+            );
+          }
+          return this.BlogPostDataPost(formData, response.data.filepath);
+        })
         .then(() => (window.location.href = "/admin"))
         .catch((error) => console.log(error));
     }
@@ -101,7 +107,7 @@ class Editor {
     imageUrl: string | null
   ): Promise<APIResponse> {
     const dataObj: blogPostData = {
-      tags: this.tagsDiv.tags,
+      tags: this.tagsDiv.getTags(),
       title: formData.get("title"),
       content: formData.get("content"),
       summary: formData.get("summary"),
@@ -111,9 +117,9 @@ class Editor {
       dataObj.imageUrl = DEFAULT_IMAGE;
     }
     const dataToSend = JSON.stringify(dataObj);
-    const httpMethod = this.postID === 0 ? "POST" : "PUT";
+    const httpMethod = this.postID === "" ? "POST" : "PUT";
     const response = await fetch(
-      "/admin/posts" + (this.postID > 0 ? "/" + this.postID : ""),
+      "/admin/posts" + (this.postID !== "" ? "/" + this.postID : ""),
       {
         credentials: "same-origin",
         mode: "same-origin",
@@ -131,9 +137,7 @@ class Editor {
     }
   }
 
-  async BlogPostImagePost(
-    formData: FormData
-  ): Promise<APIImageResponse | APIResponse> {
+  async BlogPostImagePost(formData: FormData): Promise<APIImageResponse> {
     return await fetch("/admin/posts/image", {
       credentials: "same-origin",
       mode: "same-origin",
@@ -175,15 +179,19 @@ class Editor {
 }
 
 class TagsDiv {
-  tags: string[];
-  tagsDivElement: HTMLElement;
+  private tags: string[];
+  readonly tagsDivElement: HTMLElement;
   constructor(tags: string[]) {
     this.tags = tags;
     this.tagsDivElement = document.getElementById("tags")!;
     this.setInnerHTML();
   }
 
-  addTag() {
+  getTags() {
+    return this.tags;
+  }
+
+  private addTag() {
     let tag = prompt("Enter tag");
 
     if (
@@ -197,12 +205,12 @@ class TagsDiv {
     }
   }
 
-  delTag(tag: string) {
+  private delTag(tag: string) {
     this.tags = this.tags.filter((oldTag) => oldTag !== tag);
     this.setInnerHTML();
   }
 
-  setInnerHTML() {
+  private setInnerHTML() {
     this.tagsDivElement.replaceChildren();
     this.tags.forEach((tag) => {
       this.tagsDivElement.appendChild(this.createTagButton(tag));
