@@ -76,3 +76,8 @@ func (b *BlogPost) BeforeSave(tx *gorm.DB) error {
 	return nil
 }
 	*/
+
+type UserConfig struct {
+	gorm.Model
+	FirstRunCompleted bool
+}

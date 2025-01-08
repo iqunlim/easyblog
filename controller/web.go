@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/iqunlim/easyblog/config"
 	"github.com/iqunlim/easyblog/model"
 	"github.com/iqunlim/easyblog/repository"
 	"github.com/iqunlim/easyblog/service"
@@ -14,7 +13,6 @@ import (
 
 type WebHandler interface {
 	LoginWebHandler(*gin.Context)
-	RegisterWebHandler(*gin.Context)
 	PostsWebHandler(*gin.Context)
 	PostsByIDWebHandler(*gin.Context)
 	AdminDashboardHandler(*gin.Context)
@@ -51,14 +49,6 @@ func (w *WebHandlerImpl) LoginWebHandler(c *gin.Context) {
 	}
 }
 
-func (w *WebHandlerImpl) RegisterWebHandler(c *gin.Context) {
-	if config.RegisterAllowed == "true" {
-		c.HTML(200, "register.html", gin.H{"title": "Register Admin Account"})
-	} else {
-		c.Redirect(302, "/posts")
-	}
-	//c.HTML(500, "error.html", gin.H{"err": "Not Implemeneted"})
-}
 
 func (w *WebHandlerImpl) PostsWebHandler(c *gin.Context) {
 

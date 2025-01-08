@@ -23,6 +23,7 @@ func GetDB() *gorm.DB {
 			}
 			db.AutoMigrate(&User{})
 			db.AutoMigrate(&BlogPost{})
+			db.AutoMigrate(&UserConfig{})
 			fmt.Println("Connected to database")
 			return db
 		}()

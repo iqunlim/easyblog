@@ -106,6 +106,8 @@ func CreateAPI() (*gin.Engine, error) {
 
 	webHandler := NewWebHandler(blogSvc)
 
+	// Is this the first run? run the subroutine
+	userSvc.FirstRun()
 	
 	// Template functions for mutating variables in the template
 	r.SetFuncMap(template.FuncMap{
@@ -116,8 +118,6 @@ func CreateAPI() (*gin.Engine, error) {
 	// Static file handling for the webserver portion
 	r.LoadHTMLGlob("static/template/*.html")
 	r.Static("/static", "./static")
-	r.MaxMultipartMemory = 20 << 20 //20 MB
-
 
 	// API Endpoints
 	api := r.Group("/api/v1")
@@ -133,7 +133,6 @@ func CreateAPI() (*gin.Engine, error) {
 	r.GET("/posts/:id", webHandler.PostsByIDWebHandler)
 	r.GET("/login", webHandler.LoginWebHandler)
 	r.GET("/logout", authMiddleware.LogoutHandler)
-	r.GET("/register", webHandler.RegisterWebHandler)
 	// Admin endpoints
 	requiresAuth := r.Group("/admin", authMiddleware.MiddlewareFunc())
 	requiresAuth.GET("/", webHandler.AdminDashboardHandler)
@@ -144,7 +143,7 @@ func CreateAPI() (*gin.Engine, error) {
 	requiresAuth.DELETE("/posts/:id", blogHandler.handleBlogPostDelete)
 	requiresAuth.POST("/posts", blogHandler.handleBlogPostPost)
 	requiresAuth.PUT("/posts/:id", blogHandler.handleBlogPostUpdate)
-	requiresAuth.POST("/posts/image", blogHandler.handleBlogImageUpload)
+	requiresAuth.POST("/posts/image", blogHandler.handleBlogImageUpload)	
 	return r, nil
 }
 

@@ -80,12 +80,6 @@ var (
 	// Defaults to "EasyBlogJWT"
 	JWTRealm = GetEnvWithDefault("JWT_REALM", "EasyBlogJWT")
 
-	//Defines if allowing the register page to be accessed
-	// REGISTER is the variable. Defaults to "false".
-	// Set to "true" to allow registrations.
-	// Currently, it's best to run this once and then never again
-	RegisterAllowed = GetEnvWithDefault("REGISTER", "true")
-
 	// Defines the number of megabytes that the image uploads are
 	// allowed to be. Defaults to 20 MB.
 	MaxImageSize = GetEnvWithDefault("IMAGE_MAX", "20")
