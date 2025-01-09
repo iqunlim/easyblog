@@ -83,7 +83,7 @@ func (ur *UserServiceImpl) FirstRun() {
 
 
 	var userToBe *model.User
-	name := flag.String("username", "", "Intitial Admin Username")
+	name := flag.String("user", "", "Intitial Admin Username")
 	pwd := flag.String("pwd", "", "Initial Admin Password")
 	flag.Parse()
 	if *name == "" || *pwd == "" {
@@ -92,13 +92,13 @@ func (ur *UserServiceImpl) FirstRun() {
 		fmt.Print("Admin Username: ")
 		newName, err := reader.ReadString('\n')
 		if err != nil {
-			panic(err)
+			log.Fatal("ERR: Input failed. Admin Registration failed. Are you running this for the first time in a docker container?")
 		}
 		newName = strings.Trim(newName, " \t\r\n")
 		fmt.Print("Admin Password: ")
 		newPwd, err := reader.ReadString('\n')
 		if err != nil {
-			panic(err)
+			log.Fatal("ERR: Input failed. Admin Registration failed. Are you running this for the first time in a docker container?")
 		}
 		newPwd = strings.Trim(newPwd, " \t\r\n")
 		userToBe = &model.User{
@@ -106,6 +106,7 @@ func (ur *UserServiceImpl) FirstRun() {
 			Password: newPwd,
 		}
 	} else {
+		fmt.Println("Flags detected. Attempting to add admin user...")
 		userToBe = &model.User{
 			Username: *name,
 			Password: *pwd,
@@ -121,6 +122,8 @@ func (ur *UserServiceImpl) FirstRun() {
 	if err := ur.repository.PutUserConfig(&model.UserConfig{ FirstRunCompleted: true }); err != nil {
 		log.Fatalf("Error occured in setting up config: %v", err)
 	}
+	fmt.Println("Setup complete. Restarting...")
+	os.Exit(0)
 }
 
 

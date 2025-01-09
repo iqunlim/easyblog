@@ -13,7 +13,7 @@ services:
     ports:
       - 8080:8080
     volumes:
-      - easyblog-db-data:/app/db/:rw
+      - ./easy/db/:/app/db/:rw
     environment:
       - DATABASE_LOC=/app/db/blog.db
     restart: always
