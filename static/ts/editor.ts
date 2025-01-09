@@ -7,16 +7,33 @@ interface blogPostData {
   title: FormDataEntryValue | null;
 }
 
-interface APIResponse {
+interface APIResponse<T> {
   code: number;
   message: string;
   success: boolean;
-  data?: any;
+  data?: T;
+}
+// Type guard to check if the response is a valid APIResponse<T>
+function isAPIResponse<T>(response: any): response is APIResponse<T> {
+  return (
+    typeof response === "object" &&
+    response !== null &&
+    typeof response.code === "number" &&
+    typeof response.message === "string" &&
+    typeof response.success === "boolean" &&
+    (response.data === undefined || response.data !== null)
+  );
 }
 
+interface ImageAPIResponse {
+  filepath: string;
+}
+
+/*
 interface APIImageResponse extends APIResponse {
   data?: { filepath: string };
 }
+*/
 
 const DEFAULT_IMAGE = "/static/favicon.ico";
 // API Response interface
@@ -83,11 +100,29 @@ class Editor {
       this.currentImageUrl === DEFAULT_IMAGE
     ) {
       this.BlogPostDataPost(formData, this.currentImageUrl)
+        .then((response) => {
+          if (isAPIResponse<blogPostData>(response)) {
+            return response;
+          } else {
+            throw new TypeError(
+              "API Response was invalid. Expected APIResponse<any>"
+            );
+          }
+        })
         .then(() => (window.location.href = "/admin"))
         .catch((error) => console.log(error));
       // If we did then do so
     } else {
       this.BlogPostImagePost(formData)
+        .then((response) => {
+          if (isAPIResponse<ImageAPIResponse>(response)) {
+            return response;
+          } else {
+            throw new TypeError(
+              "API response was invalid, expected APIResponse<ImageAPIResponse>"
+            );
+          }
+        })
         .then((response) => {
           if (!response.data?.filepath) {
             throw new Error(
@@ -97,6 +132,15 @@ class Editor {
           }
           return this.BlogPostDataPost(formData, response.data.filepath);
         })
+        .then((response) => {
+          if (isAPIResponse<blogPostData>(response)) {
+            return response;
+          } else {
+            throw new TypeError(
+              "API response was invalid, expected APIResponse<ImageAPIResponse>"
+            );
+          }
+        })
         .then(() => (window.location.href = "/admin"))
         .catch((error) => console.log(error));
     }
@@ -105,7 +149,7 @@ class Editor {
   async BlogPostDataPost(
     formData: FormData,
     imageUrl: string | null
-  ): Promise<APIResponse> {
+  ): Promise<APIResponse<blogPostData> | void> {
     const dataObj: blogPostData = {
       tags: this.tagsDiv.getTags(),
       title: formData.get("title"),
@@ -137,7 +181,9 @@ class Editor {
     }
   }
 
-  async BlogPostImagePost(formData: FormData): Promise<APIImageResponse> {
+  async BlogPostImagePost(
+    formData: FormData
+  ): Promise<APIResponse<ImageAPIResponse>> {
     return await fetch("/admin/posts/image", {
       credentials: "same-origin",
       mode: "same-origin",

@@ -17,7 +17,7 @@ import (
 var (
 	WhitelistedFileExtensions = []string{".jpg", ".png"}
 	WhitelistedFileMIMETypes = []string{"image/jpeg", "image/png"}
-	MaxFileSize int64 = 20 << 20
+	MaxFileSize int64 = 8 << 20
 )
 
 

@@ -1,17 +1,16 @@
 {{ define "nav" }}
 <div class="nav">
- {{ if .auth }}
+  {{ if .auth }}
   <div class="auth">
     <a href="/logout">Log out</a><a href="/admin">Admin Panel</a>
   </div>
- {{end}}
-  <a class="site-title" href="/">IQUN.XYZ</h1>
+  {{end}}
+  <a class="site-title" href="/">IQUN.XYZ</a>
   <!--
   <div class="navlinks">
     <a href="#">Sample Link</a><a href="#">Sample Link</a
     ><a href="#">Sample Link</a><a href="#">Sample Link</a
     ><a href="#">Sample Link</a>
   </div>
--->
-</div>
+--></div>
 {{ end }}
